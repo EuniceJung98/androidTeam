@@ -79,10 +79,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.app_bar_settings){
-            Toast.makeText(this, "설정눌림", Toast.LENGTH_SHORT).show();
+            //캘린더에서도 옮겨질 수 있도록
+            Date current = Calendar.getInstance().getTime();
+            String date = new SimpleDateFormat("yyyy년 MM월", Locale.getDefault()).format(current);
+            textView.setText(date);
+            Toast.makeText(this, "오늘 날짜" + current, Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);

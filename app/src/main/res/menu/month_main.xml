@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/app_bar_settings"
-        android:icon="@drawable/setting"
-        android:title="설정"
+        android:title="오늘"
         app:showAsAction="always"
         />
 </menu>
