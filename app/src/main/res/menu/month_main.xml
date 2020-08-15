@@ -6,4 +6,11 @@
         android:title="오늘"
         app:showAsAction="always"
         />
+
+    <item
+        android:id="@+id/tab5"
+        app:showAsAction="always"
+        android:title="설정"
+        android:icon="@drawable/setting"
+        android:enabled="true"/>
 </menu>
