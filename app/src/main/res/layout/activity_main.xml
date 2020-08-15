@@ -50,7 +50,9 @@
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:background="#934C4C"
-            android:text="TextView" />
+            android:text="테스트입니다"
+            android:textColor="#ffcccc"
+            android:gravity="bottom"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
