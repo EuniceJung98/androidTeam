@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.R.id.home;
+
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
@@ -39,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);//원래 상단바의 이름을 감춤
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.today);
 
         textView = findViewById(R.id.titleText);
         Date current = Calendar.getInstance().getTime();
-        String date = new SimpleDateFormat("yyyy년 MM월", Locale.getDefault()).format(current);
+        String date = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(current);
         textView.setText(date);
         textView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            textView.setText(year + "년 " + (monthOfYear+1) + "월 ");
+            textView.setText(year + "년 " + (monthOfYear+1) + "월 "+ dayOfMonth+"일");
         }
     };
 
@@ -82,10 +87,14 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+            Date current = Calendar.getInstance().getTime();
+            String date = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(current);
         if(item.getItemId() == R.id.app_bar_settings){
             //캘린더에서도 옮겨질 수 있도록
-            Date current = Calendar.getInstance().getTime();
-            String date = new SimpleDateFormat("yyyy년 MM월", Locale.getDefault()).format(current);
+            textView.setText(date);
+            Toast.makeText(this, "오늘 날짜" + current, Toast.LENGTH_SHORT).show();
+            return true;
+        }else if(home == item.getItemId()){
             textView.setText(date);
             Toast.makeText(this, "오늘 날짜" + current, Toast.LENGTH_SHORT).show();
             return true;

@@ -62,7 +62,4 @@
         app:menu="@menu/menu_bottom"
         app:labelVisibilityMode="unlabeled"
         />
-
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
