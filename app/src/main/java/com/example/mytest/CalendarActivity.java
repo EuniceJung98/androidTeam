@@ -137,17 +137,20 @@ public class CalendarActivity extends AppCompatActivity {
         curMonth = curMonthFormat;
         curDay = curDayFormat;
 
-        titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월 " + curDayFormat.format(date) + "일");
+        titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월");
 
         //타이틀바인 데이터피커클릭시
         titleText.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                LocalDate today =LocalDate.now();
-                datePickerDialog = new DatePickerDialog(CalendarActivity.this, listener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
-                datePickerDialog.getDatePicker().setCalendarViewShown(false);
-                datePickerDialog.show();
+                YearMonthPicker picker = new YearMonthPicker();
+                picker.setListener(listener);
+                picker.show(getSupportFragmentManager(), "YearMonthPicker");
+//                LocalDate today =LocalDate.now();
+//                datePickerDialog = new DatePickerDialog(CalendarActivity.this, listener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
+//                datePickerDialog.getDatePicker().setCalendarViewShown(false);
+//                datePickerDialog.show();
             }
         });
 
@@ -297,16 +300,16 @@ public class CalendarActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             //데이터피커를 통해서 날짜를 받았을 떄
             yearNum = year;
-            monthNum = monthOfYear+1;
-            monthStr = String.valueOf(monthOfYear+1);
+            monthNum = monthOfYear;
+            monthStr = String.valueOf(monthOfYear);
             dayStr = String.valueOf(dayOfMonth);
             if(monthStr.length() == 1){
-                monthStr = "0"+(monthOfYear+1);
+                monthStr = "0"+(monthOfYear);
             }
             if(dayStr.length() == 1){
                 dayStr = "0"+dayOfMonth;
             }
-            titleText.setText(year + "년 " + monthStr + "월 " + dayStr + "일");
+            titleText.setText(year + "년 " + monthStr + "월");
 
             //데이터피커로 날짜 클릭시 새로 캘린더 만들어줌
             weekList = new ArrayList();
@@ -321,13 +324,13 @@ public class CalendarActivity extends AppCompatActivity {
             dayList = new ArrayList();
             mCal = Calendar.getInstance();
             mCal.set(Calendar.YEAR, Integer.parseInt(String.valueOf(year)));
-            mCal.set(Calendar.MONTH, Integer.parseInt(String.valueOf(monthOfYear)));
+            mCal.set(Calendar.MONTH, Integer.parseInt(String.valueOf(monthOfYear))-1);
             mCal.set(Calendar.DATE, Integer.parseInt(String.valueOf(1)));
             dayNum = mCal.get(Calendar.DAY_OF_WEEK);
             for(int i = 1;  i < dayNum; i++){
                 dayList.add("");
             }
-            setCalendarDate(mCal.get(Calendar.MONTH) + 1);
+            setCalendarDate(mCal.get(Calendar.MONTH)+1);
             gridAdapter = new GridAdapter(getApplicationContext(), dayList);
             weekAdapter = new GridAdapter(getApplicationContext(), weekList);
             gridView.setAdapter(gridAdapter);
@@ -507,7 +510,7 @@ public class CalendarActivity extends AppCompatActivity {
         final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
         final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
-        titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월 " + curDayFormat.format(date) + "일");//이 값들을 데이터가 나오게 끔 넣어줌
+        titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월");//이 값들을 데이터가 나오게 끔 넣어줌
 
         weekList = new ArrayList<String>();
         weekList.add("일");

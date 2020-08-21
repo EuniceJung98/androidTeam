@@ -90,48 +90,48 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
                 }
             });
 
-            itemView.setOnTouchListener(new OnSwipeTouchListener(itemView.getContext()){
-                TextView title = itemView.findViewById(R.id.titleText);
-                TextView before3= itemView.findViewById(R.id.textView4);
-                TextView before2 = itemView.findViewById(R.id.textView5);
-                TextView before1 = itemView.findViewById(R.id.textView6);
-                TextView select = itemView.findViewById(R.id.textView7);
-                TextView next1= itemView.findViewById(R.id.textView8);
-                TextView next2 = itemView.findViewById(R.id.textView9);
-                TextView next3 = itemView.findViewById(R.id.textView10);;
-
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                public void onSwipeRight() {
-                    Log.d("TAG", "onSwipeRight: ");
-                    String selectDayStr = title.getText().toString();
-                    MainActivity activity = (MainActivity)getActivity();
-                    LocalDate selectDay = LocalDate.parse(selectDayStr);
-                    title.setText(selectDay.minusDays(1).toString());
-                    LocalDate selecday = LocalDate.parse(selectDayStr);
-                    before3.setText(selecday.minusDays(3).getDayOfMonth()+"");
-                    before2.setText(selecday.minusDays(2).getDayOfMonth()+"");
-                    before1.setText(selecday.minusDays(1).getDayOfMonth()+"");
-                    select.setText(selecday.getDayOfMonth()+"");
-                    next1.setText(selecday.plusDays(1).getDayOfMonth()+"");
-                    next2.setText(selecday.plusDays(2).getDayOfMonth()+"");
-                    next3.setText(selecday.plusDays(3).getDayOfMonth()+"");
-
-                    activity.onFragementChanged(1);
-                }
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                public void onSwipeLeft() {
- //                   Log.d("TAG", "onSwipeLeft: ");
-//                    String selectDayStr = title.getText().toString();
+//            itemView.setOnTouchListener(new OnSwipeTouchListener(itemView.getContext()){
+//                TextView title = itemView.findViewById(R.id.titleText);
+//                TextView before3= itemView.findViewById(R.id.textView4);
+//                TextView before2 = itemView.findViewById(R.id.textView5);
+//                TextView before1 = itemView.findViewById(R.id.textView6);
+//                TextView select = itemView.findViewById(R.id.textView7);
+//                TextView next1= itemView.findViewById(R.id.textView8);
+//                TextView next2 = itemView.findViewById(R.id.textView9);
+//                TextView next3 = itemView.findViewById(R.id.textView10);;
 //
+//                @RequiresApi(api = Build.VERSION_CODES.O)
+//                public void onSwipeRight() {
+//                    Log.d("TAG", "onSwipeRight: ");
+//                    String selectDayStr = title.getText().toString();
 //                    MainActivity activity = (MainActivity)getActivity();
 //                    LocalDate selectDay = LocalDate.parse(selectDayStr);
-//                    title.setText(selectDay.plusDays(1).toString());
-//                    setSevenDays();
-//                    activity.onFragementChanged(3);
-
-                    //Toast.makeText(getContext(), "다음날로 이동", Toast.LENGTH_SHORT).show();
-                }
-            });
+//                    title.setText(selectDay.minusDays(1).toString());
+//                    LocalDate selecday = LocalDate.parse(selectDayStr);
+//                    before3.setText(selecday.minusDays(3).getDayOfMonth()+"");
+//                    before2.setText(selecday.minusDays(2).getDayOfMonth()+"");
+//                    before1.setText(selecday.minusDays(1).getDayOfMonth()+"");
+//                    select.setText(selecday.getDayOfMonth()+"");
+//                    next1.setText(selecday.plusDays(1).getDayOfMonth()+"");
+//                    next2.setText(selecday.plusDays(2).getDayOfMonth()+"");
+//                    next3.setText(selecday.plusDays(3).getDayOfMonth()+"");
+//
+//                    activity.onFragementChanged(1);
+//                }
+//                @RequiresApi(api = Build.VERSION_CODES.O)
+//                public void onSwipeLeft() {
+// //                   Log.d("TAG", "onSwipeLeft: ");
+////                    String selectDayStr = title.getText().toString();
+////
+////                    MainActivity activity = (MainActivity)getActivity();
+////                    LocalDate selectDay = LocalDate.parse(selectDayStr);
+////                    title.setText(selectDay.plusDays(1).toString());
+////                    setSevenDays();
+////                    activity.onFragementChanged(3);
+//
+//                    //Toast.makeText(getContext(), "다음날로 이동", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
 
         public void setItem(DailyInAndOut item){
