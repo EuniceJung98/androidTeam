@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+<!--총 80dp-->
+    <TextView
+        android:id="@+id/tv_item_gridview"
+        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="15dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/incomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="5dp"
+        android:textSize="14dp"
+        android:textColor="#3F51B5" />
+
+    <TextView
+        android:id="@+id/expenseText"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:textSize="14dp"
+        android:textColor="#BF2929" />
+
+
+</LinearLayout>
