@@ -23,6 +23,19 @@ public class DailyInAndOut implements Serializable {
         this.memo = memo;
     }
 
+    @Override
+    public String toString() {
+        return "DailyInAndOut{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", date='" + date + '\'' +
+                ", assetName='" + assetName + '\'' +
+                ", categoryName='" + categoryName + '\'' +
+                ", amount=" + amount +
+                ", memo='" + memo + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

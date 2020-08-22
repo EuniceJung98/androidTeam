@@ -22,6 +22,15 @@ import java.util.ArrayList;
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
     ArrayList<DailyInAndOut> items = new ArrayList<>();
 
+    MainActivity mActivity;
+
+    public DailyAdapter() {
+    }
+
+    public DailyAdapter(MainActivity activity) {
+        mActivity = activity;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,7 +56,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         items.add(item);
     }
 
-    public DailyInAndOut getItem(int position){//특정포지션에 있는 책을 가져옴
+    public DailyInAndOut getItem(int position){
         return items.get(position);
     }
 
@@ -81,7 +90,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     if(pos!= RecyclerView.NO_POSITION){
-                        //Toast.makeText(itemView.getContext(),"클릭해찌"+pos+items.get(pos).getMemo(),Toast.LENGTH_SHORT).show();
+                        Log.d("수정한번 한뒤", "수정버튼누름: "+items.get(pos).toString());
                         Intent intent = new Intent(itemView.getContext(),UpdateMoneyBookActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra("contents",items.get(pos));

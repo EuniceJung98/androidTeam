@@ -1,48 +1,28 @@
 package com.example.mytest.daysofseven;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mytest.DailyAdapter;
 import com.example.mytest.DailyInAndOut;
@@ -50,8 +30,6 @@ import com.example.mytest.DatabaseHelper;
 import com.example.mytest.MainActivity;
 import com.example.mytest.OnSwipeTouchListener;
 import com.example.mytest.R;
-import com.example.mytest.RegMoneyBookActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -60,7 +38,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.R.id.accessibilityActionScrollLeft;
 import static android.R.id.home;
 import static com.example.mytest.R.id.textView13;
 import static com.example.mytest.R.id.textView14;
@@ -152,41 +129,12 @@ public class SelectDayFragment extends Fragment {
 
         //내역보여줄 리사이클러뷰
         recyclerView = view.findViewById(R.id.dailyRecyclerView);
-        adapter = new DailyAdapter();
+        adapter = new DailyAdapter(activity);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-//        recyclerView.setHasFixedSize(true);
-//        setUpItemTouchHelper();
-        recyclerView.getRootView()
-                .setOnTouchListener(new OnSwipeTouchListener(getContext()){
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            public void onSwipeRight() {
-                Log.d("TAG", "onSwipeRight: ");
-                String selectDayStr = title.getText().toString();
-                MainActivity activity = (MainActivity)getActivity();
-                LocalDate selectDay = LocalDate.parse(selectDayStr);
-                title.setText(selectDay.minusDays(1).toString());
-                setSevenDays();
-                activity.onFragementChanged(1);
-                //Toast.makeText(getContext(), "전날임", Toast.LENGTH_SHORT).show();
-            }
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            public void onSwipeLeft() {
-                Log.d("TAG", "onSwipeLeft: ");
-                String selectDayStr = title.getText().toString();
-                MainActivity activity = (MainActivity)getActivity();
-                LocalDate selectDay = LocalDate.parse(selectDayStr);
-                title.setText(selectDay.plusDays(1).toString());
-                setSevenDays();
-                activity.onFragementChanged(3);
-
-                //Toast.makeText(getContext(), "다음날로 이동", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        recyclerView.setHasFixedSize(true);
 
         outList = new ArrayList<>();
         inList = new ArrayList<>();
@@ -251,34 +199,6 @@ public class SelectDayFragment extends Fragment {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.today);
         setHasOptionsMenu(true);
-
-
-//        recyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
-//            @Override
-//            public boolean onFling(int velocityX, int velocityY) {
-//                if(velocityY<0){
-//                    String selectDayStr = title.getText().toString();
-//                    MainActivity activity = (MainActivity)getActivity();
-//                    LocalDate selectDay = LocalDate.parse(selectDayStr);
-//                    title.setText(selectDay.plusDays(1).toString());
-//                    setSevenDays();
-//                    activity.onFragementChanged(3);
-//                }else if (velocityY>0){
-//                    String selectDayStr = title.getText().toString();
-//                    MainActivity activity = (MainActivity)getActivity();
-//                    LocalDate selectDay = LocalDate.parse(selectDayStr);
-//                    title.setText(selectDay.minusDays(1).toString());
-//                    setSevenDays();
-//                    activity.onFragementChanged(1);
-//                }
-//                Log.d("플링플링", "x:"+velocityX+"Y:"+velocityY);
-//                return true;
-//            }
-//        });
-
-
-
-
 
         return view;
     }
@@ -513,7 +433,7 @@ public class SelectDayFragment extends Fragment {
     private void setUpItemTouchHelper() {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback
-                = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
 
             @Override
             public int getDragDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -553,6 +473,13 @@ public class SelectDayFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 Log.d("Swipe???", "onSwiped: "+swipeDir);
+                int position = viewHolder.getAdapterPosition();
+
+                if (swipeDir == ItemTouchHelper.LEFT) {
+                    Log.d("Swipe???", "왼쪽이래");
+                } else {
+                    Log.d("Swipe???", "오른쪽인가봐");
+                }
 //                if(swipeDir==4){
 //                    String selectDayStr = title.getText().toString();
 //                    MainActivity activity = (MainActivity)getActivity();

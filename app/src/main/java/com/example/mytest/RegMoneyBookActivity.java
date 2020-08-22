@@ -86,9 +86,20 @@ public class RegMoneyBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 inputDay = selecDayButton.getText().toString();
-                inputAmount = amountEdit.getText().toString();
-                inputMemo = memoEdit.getText().toString();
-                insertMoneybook();
+                if(amountEdit.getText()==null|amountEdit.getText().toString().equals("")){
+                    amountEdit.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            amountEdit.setFocusableInTouchMode(true);
+                            amountEdit.requestFocus();
+                        }
+                    });
+                    Toast.makeText(getApplicationContext(),"금액입력하세요",Toast.LENGTH_SHORT).show();
+                }else {
+                    inputAmount = amountEdit.getText().toString();
+                    inputMemo = memoEdit.getText().toString();
+                    insertMoneybook();
+                }
             }
         });
 

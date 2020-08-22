@@ -61,6 +61,9 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         amountEdit = findViewById(R.id.editTextNumber);
         memoEdit = findViewById(R.id.editTextMemo);
 
+
+
+
         selecDayButton.setText(today.toString());
 
         dbHelper = new DatabaseHelper(getApplicationContext());
@@ -108,9 +111,20 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 inputDay = selecDayButton.getText().toString();
-                inputAmount = amountEdit.getText().toString();
-                inputMemo = memoEdit.getText().toString();
-                confirm();
+                if(amountEdit.getText()==null|amountEdit.getText().toString().equals("")){
+                    amountEdit.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            amountEdit.setFocusableInTouchMode(true);
+                            amountEdit.requestFocus();
+                        }
+                    });
+                    Toast.makeText(getApplicationContext(),"금액입력하세요",Toast.LENGTH_SHORT).show();
+                }else {
+                    inputAmount = amountEdit.getText().toString();
+                    inputMemo = memoEdit.getText().toString();
+                    confirm();
+                }
             }
         });
 
@@ -152,8 +166,6 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(),assetList.get(position)+"가 선택되었습니다.",
-//                        Toast.LENGTH_SHORT).show();
                     inputAsset=assetList.get(position);
             }
             @Override
@@ -247,18 +259,18 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
 
 
         //수입,지출 변동없을때 바로 수정하기
-        String exUpsql="update expense set expense_date=" +inputDay+
-                ",asset_name=" +inputAsset+
-                ",expensecategory_name=" +inputCategory+
-                ",amount=" +Integer.parseInt(inputAmount)+
-                ",memo="+inputMemo+
-                " where expense_id="+data.getId();
-        String inUpsql= "update income set income_date=" +inputDay+
-                ",asset_name=" +inputAsset+
-                ",expensecategory_name=" +inputCategory+
-                ",amount=" +Integer.parseInt(inputAmount)+
-                ",memo="+inputMemo+
-                " where income_id="+data.getId();
+        String exUpsql="update expense set expense_date='" +inputDay+
+                "',asset_name='" +inputAsset+
+                "',expensecategory_name='" +inputCategory+
+                "',amount=" +Integer.parseInt(inputAmount)+
+                ",memo='"+inputMemo+
+                "' where expense_id="+data.getId();
+        String inUpsql= "update income set income_date='" +inputDay+
+                "',asset_name='" +inputAsset+
+                "',incomecategory_name='" +inputCategory+
+                "',amount=" +Integer.parseInt(inputAmount)+
+                ",memo='"+inputMemo+
+                "' where income_id="+data.getId();
 
 
         if(data.getType().equals("지출")){

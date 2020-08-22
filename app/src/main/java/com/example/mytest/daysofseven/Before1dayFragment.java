@@ -129,7 +129,7 @@ public class Before1dayFragment extends Fragment {
 
         //내역보여줄 리사이클러뷰
         recyclerView = view.findViewById(R.id.dailyRecyclerView);
-        adapter = new DailyAdapter();
+        adapter = new DailyAdapter(activity);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);

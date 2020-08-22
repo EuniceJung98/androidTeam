@@ -56,7 +56,6 @@ import static com.example.mytest.R.id.textView15;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-
     Toolbar toolbar;
     DatePicker datePicker;
     TextView textView;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase database;
     RecyclerView recyclerView;
     ArrayList<DailyInAndOut> outList,inList;
-    DailyAdapter adapter;
+    DailyAdapter adapter = new DailyAdapter(this);
     Cursor cursor;
 
     TextView incomeT,totalT,expenseT;
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("TAG", "메인엑티비티에서 실행한 showDailyResult");
         //내역보여줄 리사이클러뷰
         recyclerView = findViewById(R.id.dailyRecyclerView);
-        adapter = new DailyAdapter();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -295,4 +294,7 @@ public class MainActivity extends AppCompatActivity {
         }
         database.close();
     }
+
+
+
 }
