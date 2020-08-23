@@ -31,6 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     String sqlDaytest;
 
-    TextView expenseText;
+    TextView expenseText, incomeText;
 
     private View header;
 
@@ -102,6 +104,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         header = getLayoutInflater().inflate(R.layout.item_calendar_gridview, null, false);
         expenseText = header.findViewById(R.id.expenseText);
+        incomeText = header.findViewById(R.id.incomeText);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -155,12 +158,23 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         //+버튼 클릭시 추가페이지로 넘어감
-        FloatingActionButton fab = findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RegMoneyBookActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
             }
         });
 
@@ -504,6 +518,9 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        Toast.makeText(this, "클릭" + item, Toast.LENGTH_SHORT).show();
+
+
         long now = System.currentTimeMillis();
         date = new Date(now);
         final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
@@ -541,35 +558,53 @@ public class CalendarActivity extends AppCompatActivity {
         gridWeek.setAdapter(weekAdapter);
 
         //Log.d("TAG", "onOptionsItemSelectedcc: "+ daycheck);
-        for(int i = 1; i <= (daycheck+1); i++){
-            if(String.valueOf(i).length() == 1){
+        for(int i = 1; i <= (daycheck+1); i++) {
+            if (String.valueOf(i).length() == 1) {
                 String iStr = "0" + i;
                 daytest = curYearFormat.format(date) + "-" + curMonthFormat.format(date) + "-" + iStr;
             } else {
                 daytest = curYearFormat.format(date) + "-" + curMonthFormat.format(date) + "-" + i;
             }
-            Log.d("TAG", "onOptionsItemSelecteddayStr: "+ daytest);
-            sqlDaytest = "select sum(amount) from expense where expense_date = '" + daytest + "'";
-            Log.d("TAG", "onOptionsItemSelected: " + sqlDaytest);
 
-            if(sqlDaytest != null){
-                Cursor cursor = database.rawQuery(sqlDaytest, null);
-                expenseText.setText("");
+            String exSql = "select sum(amount) from expense where expense_date = '" + daytest + "'";
+            if (exSql != null) {
+                //Log.i("TAG", "sql" + sql);
+                Cursor cursor = database.rawQuery(exSql, null);
                 while (cursor.moveToNext()) {
                     String amount = cursor.getString(0);
                     //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
-                    if(amount != null) {
-                        //Log.d("TAG", "널이아니다: " + ex_amount);
+                    Log.d("TAG", "onOptionsItemSelected: amount : " + amount + ", daytest : " + daytest);
+                    if (amount != null) {
+                        //Log.d("TAG", "널이아니다: ");
                         //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
                         expenseText.setText(amount + "\n");
-                        //Log.d("TAG", "널이아니다: ex" + expenseText);
+                        Log.d("TAG", "onOptionsItemSelected: expenseText : " + expenseText.getText().toString());
                     } else {
-                        //Log.d("TAG", "널이다!!!: " + daytest);
+                        //Log.d("TAG", "널이다!!!: ");
                         expenseText.setText("");
                     }
                 }
-                cursor.close();
             }
+            Log.d("TAG", "onOptionsItemSelectedexSql: " + exSql);
+
+            String inSql = "select sum(amount) from income where income_date = '" + daytest + "'";
+            if (inSql != null) {
+                //Log.i("TAG", "sql" + sql);
+                Cursor cursor = database.rawQuery(inSql, null);
+                while (cursor.moveToNext()) {
+                    String amount = cursor.getString(0);
+                    //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
+                    if (amount != null) {
+                        //Log.d("TAG", "널이아니다: ");
+                        //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
+                        incomeText.setText(amount + "\n");
+                    } else {
+                        //Log.d("TAG", "널이다!!!: ");
+                        incomeText.setText("");
+                    }
+                }
+            }
+            Log.d("TAG", "onOptionsItemSelectedinSql: " + inSql);
         }
         return true;
     }
