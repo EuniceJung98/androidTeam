@@ -40,6 +40,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             public void onClick(View v) {
                 Log.d("TAG", "onClick:position " + item.getDate());
                 Intent intent = new Intent(v.getContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("date", item.getDate());
                 v.getContext().startActivity(intent);
             }

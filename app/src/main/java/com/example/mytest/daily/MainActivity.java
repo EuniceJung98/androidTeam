@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = MainActivity.this;
-
+        Log.d("메인엑티비티", "onCreate: ");
         // Toast.makeText(getApplicationContext(),"onCreate",Toast.LENGTH_SHORT).show();
 
         toolbar = findViewById(R.id.toolbar);
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),RegMoneyBookActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("regDate",textView.getText().toString());
                 startActivity(intent);
             }
         });
@@ -156,18 +157,32 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-        //Log.d("달에서 전달받은값이 오나?", "onCreate: "+getIntent().getStringExtra("date"));
-        if(getIntent()!=null){
-            String monthSelctDate=getIntent().getStringExtra("date");
+        Intent loadedIntent=getIntent();
+        if(loadedIntent!=null){
+            String monthSelctDate=loadedIntent.getStringExtra("date");
+            Log.d("메인액티비티, 크리에이트", "전달받은값: "+monthSelctDate);
             if (monthSelctDate!=null){
                 textView.setText(monthSelctDate);
             }
+            loadedIntent.removeExtra("date");
         }
 
     }//onCreate끝
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //Log.d("달에서 전달받은값이 오나?", "onCreate: "+getIntent().getStringExtra("date"));
+        Intent loadedIntent=getIntent();
+        if(loadedIntent!=null){
+            String monthSelctDate=loadedIntent.getStringExtra("date");
+            Log.d("메인액티비티, onStart", "전달받은값: "+monthSelctDate);
+            if (monthSelctDate!=null){
+                textView.setText(monthSelctDate);
+            }
+            loadedIntent.removeExtra("date");
+        }
+    }
 
     //헤드 가운데 날짜 선택했을때
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {

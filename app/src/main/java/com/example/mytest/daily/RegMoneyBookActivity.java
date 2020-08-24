@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,7 +62,12 @@ public class RegMoneyBookActivity extends AppCompatActivity {
         amountEdit = findViewById(R.id.editTextNumber);
         memoEdit = findViewById(R.id.editTextMemo);
 
-        selecDayButton.setText(today.toString());
+        if(getIntent().getStringExtra("regDate")==null){
+            selecDayButton.setText(today.toString());
+        }else {
+            String selecDate=getIntent().getStringExtra("regDate");
+            selecDayButton.setText(selecDate);
+        }
 
         dbHelper = new DatabaseHelper(getApplicationContext());
         database = dbHelper.getWritableDatabase();
@@ -75,8 +81,32 @@ public class RegMoneyBookActivity extends AppCompatActivity {
         selecDayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(RegMoneyBookActivity.this
-                        ,listener, today.getYear(),today.getMonthValue()-1,today.getDayOfMonth());
+                DatePickerDialog dialog;
+                if(getIntent().getStringExtra("regDate")==null){
+                    dialog = new DatePickerDialog(RegMoneyBookActivity.this
+                            ,listener, today.getYear(),today.getMonthValue()-1,today.getDayOfMonth());
+                }else {
+                    String selecDate=getIntent().getStringExtra("regDate");
+                    String[] dates=selecDate.split("-");
+                    Log.d("날짜등록", "우선 확인용"+dates[1].indexOf("0"));
+                    String dayStr,monthStr;
+                    if (dates[1].indexOf("0")==0){
+                        monthStr=dates[1].substring(1);
+                        Log.d("날짜등록", "변경한거"+monthStr);
+                    }else{
+                        monthStr=dates[1];
+                    }
+                    if (dates[2].indexOf("0")==0){
+                        dayStr=dates[2].substring(1);
+                        Log.d("날짜등록", "변경한거"+dayStr);
+                    }else{
+                        dayStr=dates[2];
+                    }
+
+                    dialog = new DatePickerDialog(RegMoneyBookActivity.this
+                            ,listener, Integer.parseInt(dates[0]),Integer.parseInt(monthStr)-1,Integer.parseInt(dayStr));
+                }
+
                 dialog.show();
             }
         });
@@ -229,6 +259,7 @@ public class RegMoneyBookActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP
                         |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("date",inputDay+"");
                 finish();
                 MA.startActivity(intent);
             }

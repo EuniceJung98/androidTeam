@@ -109,10 +109,12 @@ public class CalendarActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.tab1:
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         return true;
                     case R.id.tab2:
                         Intent intent2 = new Intent(getApplicationContext(), CalendarActivity.class);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent2);
                         return true;
                 }
@@ -158,6 +160,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RegMoneyBookActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
