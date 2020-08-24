@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         activity = MainActivity.this;
 
-       // Toast.makeText(getApplicationContext(),"onCreate",Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(),"onCreate",Toast.LENGTH_SHORT).show();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     @Override//좌상단-오늘 클릭했을때
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-       if(R.id.tab5 == item.getItemId()){
+        if(R.id.tab5 == item.getItemId()){
             //Toast.makeText(this, "설정 눌렀지" , Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
