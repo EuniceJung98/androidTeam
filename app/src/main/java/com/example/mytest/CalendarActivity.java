@@ -159,8 +159,10 @@ public class CalendarActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "day " + day, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), RegMoneyBookActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("regDate", day);//선택한 날짜로 입력가능
                 startActivity(intent);
             }
         });
