@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import static android.R.id.home;
 
 public class CalendarActivity extends AppCompatActivity {
 
@@ -84,12 +85,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     int daycheck;
 
-    String sqlDaytest;
-
-    TextView expenseText, incomeText;
-
-    private View header;
-
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +97,9 @@ public class CalendarActivity extends AppCompatActivity {
         gridWeek = findViewById(R.id.gridWeek);
         recyclerView = findViewById(R.id.recyclerView);
 
-        header = getLayoutInflater().inflate(R.layout.item_calendar_gridview, null, false);
-        expenseText = header.findViewById(R.id.expenseText);
-        incomeText = header.findViewById(R.id.incomeText);
-
+        //하단네비바 설정
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.tab2);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -124,10 +117,12 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);//원래 상단바의 이름을 감춤
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//오늘버튼 생성
+        //오늘버튼 생성
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.today);
 
         //처음타이틀바에 있는 날짜 지정
@@ -140,9 +135,10 @@ public class CalendarActivity extends AppCompatActivity {
         curMonth = curMonthFormat;
         curDay = curDayFormat;
 
+        //타이틀바 텍스트 지정
         titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월");
 
-        //타이틀바인 데이터피커클릭시
+        //타이틀바인 데이터피커클릭시(년, 월만 선택가능한 데이터피커)
         titleText.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -150,10 +146,6 @@ public class CalendarActivity extends AppCompatActivity {
                 YearMonthPicker picker = new YearMonthPicker();
                 picker.setListener(listener);
                 picker.show(getSupportFragmentManager(), "YearMonthPicker");
-//                LocalDate today =LocalDate.now();
-//                datePickerDialog = new DatePickerDialog(CalendarActivity.this, listener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
-//                datePickerDialog.getDatePicker().setCalendarViewShown(false);
-//                datePickerDialog.show();
             }
         });
 
@@ -167,6 +159,7 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+        //상세내역에서 스크롤시 +버튼이 사라지고 나타나고
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -202,6 +195,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //해당 월에 표현할 일 수를 구함
+        //월마다 제일 마지막 날짜를 제대로 해주기 위해서 +1해줌
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
 
         //gridView와 gridWeek에 dayList, weekList를 추가해줌
@@ -228,7 +222,6 @@ public class CalendarActivity extends AppCompatActivity {
                     dayStr = "0"+(position+2-dayNum);
                 }
                 day = yearNum + "-" + monthStr + "-" + dayStr;//조회시 조건에 사용하기 위함
-                //Toast.makeText(getApplication(), "day" + day, Toast.LENGTH_SHORT).show();
                 adapter.clear();
                 select();
             }
@@ -252,6 +245,7 @@ public class CalendarActivity extends AppCompatActivity {
             Cursor cursorEx = database.rawQuery(exSql, null);
             Cursor cursorIn = database.rawQuery(inSql, null);
 
+            //수입내용
             while (cursorIn.moveToNext()){
                 String incomecategory_name = cursorIn.getString(0);
                 int amount = cursorIn.getInt(1);
@@ -268,43 +262,23 @@ public class CalendarActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             cursorIn.close();
 
+            //지출내용
             while (cursorEx.moveToNext()){
                 String expensecategory_name = cursorEx.getString(0);
                 int amount = cursorEx.getInt(1);
                 String memo = cursorEx.getString(2);
                 String expense_date = cursorEx.getString(3);
                 if(memo==null || memo.equals("")){
-                    //Toast.makeText(getApplicationContext(), "클릭됨"+ec_num, Toast.LENGTH_SHORT).show();
                     DailyInAndOut d = new DailyInAndOut(0, null, expense_date, null, expensecategory_name, amount, null);
-//                    for(CalendarDto cd : adapter.getList()){
-//                        Log.i("TAG", "c1:"+cd.getExAmount());
-//                    }
                     adapter.addItem(d);
-
-                    //category.append(ec_num+"\n");
-
                 } else {
-//                    Toast.makeText(getApplicationContext(), "클릭됨"+ec_num+ex_memo, Toast.LENGTH_SHORT).show();
-                    //category.append(ec_num + "(" + ex_memo + ")\n" );
                     DailyInAndOut d = new DailyInAndOut(0, null, expense_date, null, expensecategory_name, amount, memo);
-//                    for(CalendarDto cd : adapter.getList()){
-//                        Log.i("TAG", "c2:"+cd.getExAmount());
-//                    }
                     adapter.addItem(d);
                 }
 
             }
-//            for (CalendarDto cd: adapter.getList()
-//            ) {
-//                Log.i("TAG", "select: " + cd.getExAmount());
-//            }
             adapter.notifyDataSetChanged();
-
-            //money.append(ex_amount+"원\n");
-            //recyclerView.setAdapter(adapter);
             cursorEx.close();
-        } else if(database == null){
-            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -317,6 +291,7 @@ public class CalendarActivity extends AppCompatActivity {
             monthNum = monthOfYear;
             monthStr = String.valueOf(monthOfYear);
             dayStr = String.valueOf(dayOfMonth);
+            //월과 일의 길이를 계산해서 한자리 수 일 때는 앞에 0을 붙혀줌
             if(monthStr.length() == 1){
                 monthStr = "0"+(monthOfYear);
             }
@@ -356,7 +331,9 @@ public class CalendarActivity extends AppCompatActivity {
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
 
             daySelector = String.valueOf(dayOfMonth);
+            //데이터피커의 년과 월과 일
             selectDay = year + "-" + monthStr + "-" + dayStr;
+            //데이터피커로 얻은 년과 월
             selectym = year + "-" + monthStr + "-";
         }
     };
@@ -372,15 +349,12 @@ public class CalendarActivity extends AppCompatActivity {
     //일별 계산
     private void setCalendarDate(int month) {
         mCal.set(Calendar.MONTH, month - 1);
-
-
         for(int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
             dayList.add("" + (i + 1));
-            //expenseText.setText(i+"test");
-
         }
     }
 
+    //달력에 들어갈 내용
     private class GridAdapter extends BaseAdapter {
 
         private final List<String> list;
@@ -412,36 +386,30 @@ public class CalendarActivity extends AppCompatActivity {
             ViewHolder holder = null;
 
             if(convertView == null){
+                //각 캘린더에 들어갈 날짜와 수입합계, 지출합계를 view객체로 반환해줌
                 convertView = inflater.inflate(R.layout.item_calendar_gridview, parent, false);
                 holder = new ViewHolder();
-
-                //날짜를 표현하는 tvItemGridView
-                //그래서 날짜는 gridview의 item임
-//                holder.tvItemGridView = convertView.findViewById(R.id.tv_item_gridview);
-//                holder.incomeText = convertView.findViewById(R.id.incomeText);
-//                holder.expenseText = convertView.findViewById(R.id.expenseText);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
+            //
             holder.tvItemGridView = convertView.findViewById(R.id.tv_item_gridview);
             holder.incomeText = convertView.findViewById(R.id.incomeText);
             holder.expenseText = convertView.findViewById(R.id.expenseText);
 
-
+            //해당되는 날짜를 붙혀줌
             holder.tvItemGridView.setText("" + getItem(position));
-
-            //selectym가 일단 datepicker을 해야지 뜨기때문에 처음의 값이 null로 나옴
-            //db에 ex_date의 값이 있는것을 원함?
 
             String dayStr="0";
             mCal = Calendar.getInstance();
             String monthStr = String.valueOf(mCal.get(Calendar.MONTH)+1);
+            //10월 전까지의 월 앞에 0을 붙혀줌
             if(monthStr.length() == 1){
                 monthStr = "0"+monthStr;
             }
             String now = mCal.get(Calendar.YEAR) + "-" + monthStr + "-";
-            //Log.i("TAG", now);
+            //뷰에 있는 포지선으로 숫자 앞에 0을 붙힐 일자를 구함
             daycheck= position-dayNum+2;
             if(daycheck<10){
                 dayStr=dayStr+daycheck;
@@ -449,55 +417,46 @@ public class CalendarActivity extends AppCompatActivity {
                 dayStr=String.valueOf(daycheck);
             }
             //datepicker하기 전, 초기값
+            //datepicker전 데이터를 뿌려줌
             if(selectym==null){
                 daytest=now+dayStr;//현재년월
-                //Log.i("TAG", "daytest현재"+daytest);
-                //datepicker하고 난 뒤에 날짜
+                //datepicker를 통해서 날짜를 받았을 때
             }else {
                 daytest=selectym+dayStr;
-                //Log.i("TAG", "daytest"+daytest);
+                //selectym는 년, 월이 들어가 있음
             }
 
+            //지출의 합계
             String exSql = "select sum(amount) from expense where expense_date = '" + daytest + "'";
             if(exSql != null){
-                //Log.i("TAG", "sql" + sql);
                 Cursor cursor = database.rawQuery(exSql, null);
                 while (cursor.moveToNext()) {
                     String amount = cursor.getString(0);
-                    //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
                     if(amount != null) {
-                        //Log.d("TAG", "널이아니다: ");
-                        //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
                         holder.expenseText.setText(amount + "\n");
                     } else {
-                        //Log.d("TAG", "널이다!!!: ");
                         holder.expenseText.setText("");
                     }
                 }
             }
 
+            //수입의 합계
             String inSql = "select sum(amount) from income where income_date = '" + daytest + "'";
             if(inSql != null){
-                //Log.i("TAG", "sql" + sql);
                 Cursor cursor = database.rawQuery(inSql, null);
                 while (cursor.moveToNext()) {
                     String amount = cursor.getString(0);
-                    //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
                     if(amount != null) {
-                        //Log.d("TAG", "널이아니다: ");
-                        //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
                         holder.incomeText.setText(amount + "\n");
                     } else {
-                        //Log.d("TAG", "널이다!!!: ");
                         holder.incomeText.setText("");
                     }
                 }
             }
-           // holder.expenseText.append("p"+position);
 
+            //현재날짜 색깔 변경
             mCal = Calendar.getInstance();
-            Integer today = mCal.get(Calendar.DAY_OF_MONTH);
-            String sToday = String.valueOf(today);
+            String sToday= String.valueOf(mCal.get(Calendar.DAY_OF_MONTH));
 
             if(sToday.equals(getItem(position))) {
                 holder.tvItemGridView.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -510,102 +469,63 @@ public class CalendarActivity extends AppCompatActivity {
         TextView tvItemGridView;
         TextView incomeText;
         TextView expenseText;
-
     }
 
-    //위에 오늘 버튼 클릭시 실행됨
+    //타이틀바에 있는 오늘 버튼 클릭시 실행됨
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        Toast.makeText(this, "클릭" + item, Toast.LENGTH_SHORT).show();
+        if (home == item.getItemId()) {
+            long now = System.currentTimeMillis();
+            date = new Date(now);
+            final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
+            final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
+            final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
+            titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월");//이 값들을 데이터가 나오게 끔 넣어줌
 
-        long now = System.currentTimeMillis();
-        date = new Date(now);
-        final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
-        final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
-        final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
+            weekList = new ArrayList<String>();
+            weekList.add("일");
+            weekList.add("월");
+            weekList.add("화");
+            weekList.add("수");
+            weekList.add("목");
+            weekList.add("금");
+            weekList.add("토");
 
-        titleText.setText(curYearFormat.format(date) + "년 " + curMonthFormat.format(date) + "월");//이 값들을 데이터가 나오게 끔 넣어줌
+            dayList = new ArrayList<String>();
+            mCal = Calendar.getInstance();
 
-        weekList = new ArrayList<String>();
-        weekList.add("일");
-        weekList.add("월");
-        weekList.add("화");
-        weekList.add("수");
-        weekList.add("목");
-        weekList.add("금");
-        weekList.add("토");
+            mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
+            //매달 1일의 요일을 가져옴
+            dayNum = mCal.get(Calendar.DAY_OF_WEEK);
+            monthNum = mCal.get(Calendar.MONTH) + 1;
+            yearNum = mCal.get(Calendar.YEAR);
+            for (int i = 1; i < dayNum; i++) {
+                dayList.add("");
+            }
 
-        dayList = new ArrayList<String>();
-        mCal = Calendar.getInstance();
+            setCalendarDate(mCal.get(Calendar.MONTH) + 1);
 
-        mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
-        //매달 1일의 요일을 가져옴
-        dayNum = mCal.get(Calendar.DAY_OF_WEEK);
-        monthNum = mCal.get(Calendar.MONTH) + 1;
-        yearNum = mCal.get(Calendar.YEAR);
-        for (int i = 1; i < dayNum; i++) {
-            dayList.add("");
+            gridAdapter = new GridAdapter(getApplicationContext(), dayList);
+            weekAdapter = new GridAdapter(getApplicationContext(), weekList);
+            gridView.setAdapter(gridAdapter);
+            gridWeek.setAdapter(weekAdapter);
+
+            //화면에 뿌려줄 수 있게 view에 있는 변수
+            String monthnumstr="";
+            if(monthNum<10){
+                monthnumstr=monthnumstr+"0"+monthNum;
+            }else{
+                monthnumstr=monthNum+"";
+            }
+            selectym=yearNum+"-"+monthnumstr+"-";
+            return true;
+        } else if (R.id.tab5 == item.getItemId()) {
+            Toast.makeText(this, "앱빠뭘빠설정빠", Toast.LENGTH_SHORT).show();
         }
 
-        setCalendarDate(mCal.get(Calendar.MONTH) + 1);
-
-        gridAdapter = new GridAdapter(getApplicationContext(), dayList);
-        weekAdapter = new GridAdapter(getApplicationContext(), weekList);
-        gridView.setAdapter(gridAdapter);
-        gridWeek.setAdapter(weekAdapter);
-
-        //Log.d("TAG", "onOptionsItemSelectedcc: "+ daycheck);
-        for(int i = 1; i <= (daycheck+1); i++) {
-            if (String.valueOf(i).length() == 1) {
-                String iStr = "0" + i;
-                daytest = curYearFormat.format(date) + "-" + curMonthFormat.format(date) + "-" + iStr;
-            } else {
-                daytest = curYearFormat.format(date) + "-" + curMonthFormat.format(date) + "-" + i;
-            }
-
-            String exSql = "select sum(amount) from expense where expense_date = '" + daytest + "'";
-            if (exSql != null) {
-                //Log.i("TAG", "sql" + sql);
-                Cursor cursor = database.rawQuery(exSql, null);
-                while (cursor.moveToNext()) {
-                    String amount = cursor.getString(0);
-                    //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
-                    Log.d("TAG", "onOptionsItemSelected: amount : " + amount + ", daytest : " + daytest);
-                    if (amount != null) {
-                        //Log.d("TAG", "널이아니다: ");
-                        //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
-                        expenseText.setText(amount + "\n");
-                        Log.d("TAG", "onOptionsItemSelected: expenseText : " + expenseText.getText().toString());
-                    } else {
-                        //Log.d("TAG", "널이다!!!: ");
-                        expenseText.setText("");
-                    }
-                }
-            }
-            Log.d("TAG", "onOptionsItemSelectedexSql: " + exSql);
-
-            String inSql = "select sum(amount) from income where income_date = '" + daytest + "'";
-            if (inSql != null) {
-                //Log.i("TAG", "sql" + sql);
-                Cursor cursor = database.rawQuery(inSql, null);
-                while (cursor.moveToNext()) {
-                    String amount = cursor.getString(0);
-                    //Toast.makeText(getApplicationContext(), ex_amount + "과연", Toast.LENGTH_SHORT).show();
-                    if (amount != null) {
-                        //Log.d("TAG", "널이아니다: ");
-                        //Toast.makeText(getApplicationContext(), dayStr+"select", Toast.LENGTH_SHORT).show();
-                        incomeText.setText(amount + "\n");
-                    } else {
-                        //Log.d("TAG", "널이다!!!: ");
-                        incomeText.setText("");
-                    }
-                }
-            }
-            Log.d("TAG", "onOptionsItemSelectedinSql: " + inSql);
-        }
         return true;
     }
 
