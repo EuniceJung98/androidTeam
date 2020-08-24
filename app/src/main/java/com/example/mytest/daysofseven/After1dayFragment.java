@@ -21,13 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mytest.DailyAdapter;
-import com.example.mytest.DailyInAndOut;
+import com.example.mytest.daily.DailyAdapter;
+import com.example.mytest.daily.DailyInAndOut;
 import com.example.mytest.DatabaseHelper;
-import com.example.mytest.MainActivity;
-import com.example.mytest.OnSwipeTouchListener;
+import com.example.mytest.daily.MainActivity;
+import com.example.mytest.daily.OnSwipeTouchListener;
 import com.example.mytest.R;
 
 import java.text.SimpleDateFormat;

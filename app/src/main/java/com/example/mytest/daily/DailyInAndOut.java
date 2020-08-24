@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.daily;
 
 import java.io.Serializable;
 

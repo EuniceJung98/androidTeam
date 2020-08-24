@@ -1,22 +1,18 @@
-package com.example.mytest;
+package com.example.mytest.daily;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.time.LocalDate;
+import com.example.mytest.R;
+
 import java.util.ArrayList;
 
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
@@ -91,7 +87,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
                     int pos = getAdapterPosition();
                     if(pos!= RecyclerView.NO_POSITION){
                         Log.d("수정한번 한뒤", "수정버튼누름: "+items.get(pos).toString());
-                        Intent intent = new Intent(itemView.getContext(),UpdateMoneyBookActivity.class);
+                        Intent intent = new Intent(itemView.getContext(), UpdateMoneyBookActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra("contents",items.get(pos));
                         itemView.getContext().startActivity(intent);

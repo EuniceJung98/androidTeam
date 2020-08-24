@@ -1,6 +1,5 @@
 package com.example.mytest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mytest.daily.DailyInAndOut;
+import com.example.mytest.daily.MainActivity;
 
 import java.util.ArrayList;
 

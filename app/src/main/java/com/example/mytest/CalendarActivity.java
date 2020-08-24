@@ -28,6 +28,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mytest.daily.DailyInAndOut;
+import com.example.mytest.daily.MainActivity;
+import com.example.mytest.daily.RegMoneyBookActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -99,7 +102,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         //하단네비바 설정
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.tab2);
+        bottomNavigationView.setSelectedItemId(R.id.tab2);//해당되는 하단바 색변경됨
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

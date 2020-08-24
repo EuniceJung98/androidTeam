@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.daily;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mytest.DatabaseHelper;
+import com.example.mytest.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,6 +51,9 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
 
     DailyInAndOut data;
 
+    Button assetUpdateButton,categoryUpdateButton;
+    String assetresult,categoryresult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,13 +62,10 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         selecIncomeButton = findViewById(R.id.selectInButton);
         selecExpenseButton = findViewById(R.id.selectExButton);
         selecDayButton = findViewById(R.id.selectDayButton);
-        spinner = findViewById(R.id.assetSpinner);
-        spinner2 = findViewById(R.id.selectCategorySpinner);
+        //spinner = findViewById(R.id.assetSpinner);
+        //spinner2 = findViewById(R.id.selectCategorySpinner);
         amountEdit = findViewById(R.id.editTextNumber);
         memoEdit = findViewById(R.id.editTextMemo);
-
-
-
 
         selecDayButton.setText(today.toString());
 
@@ -86,12 +89,25 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
                 memoEdit.setText(data.getMemo());
             }
         }
-        setCategory();
-        setCategoryName();
-        setAsset();
-        //원래 작성된 내용 선택하기
-        spinner.setSelection(assetNum);
-        spinner2.setSelection(catNum);
+
+        assetUpdateButton = findViewById(R.id.assetUpdateButton);
+        assetUpdateButton.setText(data.getAssetName());
+        //자산선택버튼 누르면 스피너가 나오게
+        assetUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent assetIntent = new Intent(getApplicationContext(),AssetSpinerActivity.class);
+                assetIntent.putExtra("beforeAsset",data.getAssetName());
+                startActivityForResult(assetIntent,101);
+            }
+        });
+
+//        setCategory();
+//        setCategoryName();
+//        setAsset();
+//        //원래 작성된 내용 선택하기
+//        spinner.setSelection(assetNum);
+//        spinner2.setSelection(catNum);
 
 
         //날짜 버튼 클릭
@@ -139,74 +155,111 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         //수입,지출 선택버튼
         selecIncomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//수입버튼
                 selecIncomeButton.setBackgroundColor(Color.parseColor("#ffcccc"));
                 selecExpenseButton.setBackgroundColor(Color.parseColor("#d6d7d7"));
                 isExpenseChecked=false;
-                setCategoryName();
+                if(data.getType().equals("수입")){//원래 수입이었을때카테고리 선택된거 되돌리기
+                    categoryUpdateButton.setText(data.getCategoryName());
+                    categoryresult = categoryUpdateButton.getText().toString();
+                }else{//원래는 지출이었는데 수입버튼 클릭
+                    categoryUpdateButton.setText(incomeCat.get(0));//수입카테고리 첫번째로 이름 변경
+                    categoryresult = categoryUpdateButton.getText().toString();
+                }
+                //setCategoryName();
             }
         });
         selecExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//지출버튼
                 selecExpenseButton.setBackgroundColor(Color.parseColor("#ffcccc"));
                 selecIncomeButton.setBackgroundColor(Color.parseColor("#d6d7d7"));
                 isExpenseChecked=true;
-                setCategoryName();
+                if(data.getType().equals("지출")){//원래 지출이었을때카테고리 선택된거 되돌리기
+                    categoryUpdateButton.setText(data.getCategoryName());
+                    categoryresult = categoryUpdateButton.getText().toString();
+                }else{//원래는 수입인데 지출버튼 클릭
+                    categoryUpdateButton.setText(expenseCat.get(0));//지출카테고리 첫번째로 이름 변경
+                    categoryresult = categoryUpdateButton.getText().toString();
+                }
+                //setCategoryName();
             }
         });
-    }
 
-    private void setAsset() {
-        arrayAdapter2 = new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_item,
-                assetList);
-        arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter2);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        categoryUpdateButton = findViewById(R.id.categoryUpdateButton);
+        categoryUpdateButton.setText(data.getCategoryName());
+        categoryUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    inputAsset=assetList.get(position);
+            public void onClick(View v) {
+                Intent categroyIntent = new Intent(getApplicationContext(),CategorySpinnerActivity.class);
+                categroyIntent.putExtra("beforeCategory",data.getCategoryName());
+                if(isExpenseChecked){
+                    categroyIntent.putExtra("Type","지출");
+                }else{
+                    categroyIntent.putExtra("Type","수입");
+                }
+                startActivityForResult(categroyIntent,201);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
         });
-    }
 
-    private void setCategoryName() {
-        if(isExpenseChecked){
-            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                    android.R.layout.simple_spinner_item,
-                    expenseCat);
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner2.setAdapter(arrayAdapter);
-            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    inputCategory=expenseCat.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) { }
-            });
-        }else{
-            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                    android.R.layout.simple_spinner_item,
-                    incomeCat);
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner2.setAdapter(arrayAdapter);
-            spinner2.setSelection(2);
-            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    inputCategory=incomeCat.get(position);
-                }
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) { }
-            });
-        }
+        setCategory();//카테고리 이름가져오기
+        assetresult = assetUpdateButton.getText().toString();
+        categoryresult = categoryUpdateButton.getText().toString();
 
     }
+
+//    private void setAsset() {
+//        arrayAdapter2 = new ArrayAdapter<>(getApplicationContext(),
+//                android.R.layout.simple_spinner_item,
+//                assetList);
+//        arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(arrayAdapter2);
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    inputAsset=assetList.get(position);
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) { }
+//        });
+//
+//    }
+
+//    private void setCategoryName() {
+//        if(isExpenseChecked){
+//            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+//                    android.R.layout.simple_spinner_item,
+//                    expenseCat);
+//            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            spinner2.setAdapter(arrayAdapter);
+//            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    inputCategory=expenseCat.get(position);
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) { }
+//            });
+//        }else{
+//            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+//                    android.R.layout.simple_spinner_item,
+//                    incomeCat);
+//            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            spinner2.setAdapter(arrayAdapter);
+//            spinner2.setSelection(2);
+//            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    inputCategory=incomeCat.get(position);
+//                }
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) { }
+//            });
+//        }
+//
+//    }
 
     private void setCategory() {
         int iNum=-1;
@@ -231,17 +284,17 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
             }
             expenseCat.add(name);
         }
-        cursor = database.rawQuery("select asset_name from asset",null);
-        //자산리스트
-
-        while(cursor.moveToNext()){
-            assNum++;
-            String name = cursor.getString(0);
-            if(data.getAssetName().equals(name)){
-                assetNum=assNum;
-            }
-            assetList.add(name);
-        }
+//        cursor = database.rawQuery("select asset_name from asset",null);
+//        //자산리스트
+//
+//        while(cursor.moveToNext()){
+//            assNum++;
+//            String name = cursor.getString(0);
+//            if(data.getAssetName().equals(name)){
+//                assetNum=assNum;
+//            }
+//            assetList.add(name);
+//        }
         cursor.close();
     }
 
@@ -249,25 +302,25 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         //수입,지출이 변동있으면 삭제하고 입력하기
         String exDelsql="delete from expense where expense_id="+data.getId();
         String inInsertsql="insert into income(income_date, asset_name ,incomecategory_name,amount,memo)"+
-                " values('"+inputDay+"','"+inputAsset+"','"+inputCategory+"',"+
+                " values('"+inputDay+"','"+assetresult+"','"+categoryresult+"',"+
                 Integer.parseInt(inputAmount)+",'"+inputMemo+"')";
 
         String inDelsql="delete from income where income_id="+data.getId();
         String exInsertsql="insert into expense(expense_date,asset_name,expensecategory_name,amount,memo)"+
-                " values('"+inputDay+"','"+inputAsset+"','"+inputCategory+"',"+
+                " values('"+inputDay+"','"+assetresult+"','"+categoryresult+"',"+
                 Integer.parseInt(inputAmount)+",'"+inputMemo+"')";
 
 
         //수입,지출 변동없을때 바로 수정하기
         String exUpsql="update expense set expense_date='" +inputDay+
-                "',asset_name='" +inputAsset+
-                "',expensecategory_name='" +inputCategory+
+                "',asset_name='" +assetresult+
+                "',expensecategory_name='" +categoryresult+
                 "',amount=" +Integer.parseInt(inputAmount)+
                 ",memo='"+inputMemo+
                 "' where expense_id="+data.getId();
         String inUpsql= "update income set income_date='" +inputDay+
-                "',asset_name='" +inputAsset+
-                "',incomecategory_name='" +inputCategory+
+                "',asset_name='" +assetresult+
+                "',incomecategory_name='" +categoryresult+
                 "',amount=" +Integer.parseInt(inputAmount)+
                 ",memo='"+inputMemo+
                 "' where income_id="+data.getId();
@@ -384,4 +437,25 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
 
         }
     };
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            if (resultCode == RESULT_OK) {
+                //데이터 받기
+                assetresult = data.getStringExtra("selectAssetStr");
+                assetUpdateButton.setText(assetresult);
+            }
+        }else if (requestCode == 201){
+            if (resultCode == RESULT_OK) {
+                //데이터 받기
+                categoryresult = data.getStringExtra("updateCategoryStr");
+                categoryUpdateButton.setText(categoryresult);
+            }
+        }
+    }
+
+
 }

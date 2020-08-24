@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.daily;
 
 public interface OnItemClick {
     void onClick(int index);

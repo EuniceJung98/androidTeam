@@ -24,11 +24,11 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.example.mytest.DailyAdapter;
-import com.example.mytest.DailyInAndOut;
+import com.example.mytest.daily.DailyAdapter;
+import com.example.mytest.daily.DailyInAndOut;
 import com.example.mytest.DatabaseHelper;
-import com.example.mytest.MainActivity;
-import com.example.mytest.OnSwipeTouchListener;
+import com.example.mytest.daily.MainActivity;
+import com.example.mytest.daily.OnSwipeTouchListener;
 import com.example.mytest.R;
 
 import java.text.SimpleDateFormat;
@@ -201,7 +201,7 @@ public class SelectDayFragment extends Fragment {
         setHasOptionsMenu(true);
 
         return view;
-    }
+    }//onCreateView끝
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void dayclickEvent() {

@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.daily;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -21,7 +21,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.reflect.Field;
+import com.example.mytest.DatabaseHelper;
+import com.example.mytest.R;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 

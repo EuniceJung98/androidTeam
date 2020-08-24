@@ -53,6 +53,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(incomeCategoryinsertsql);
         String assetinsertsql = "insert into asset(asset_name) values('현금'),('체크카드'),('신용카드')";
         db.execSQL(assetinsertsql);
+        String inputUserSql = "insert into user(password)" +
+                "values('')";
+        db.execSQL(inputUserSql);
     }
 
     @Override
