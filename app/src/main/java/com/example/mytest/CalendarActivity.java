@@ -526,7 +526,10 @@ public class CalendarActivity extends AppCompatActivity {
             selectym=yearNum+"-"+monthnumstr+"-";
             return true;
         } else if (R.id.tab5 == item.getItemId()) {
-            Toast.makeText(this, "앱빠뭘빠설정빠", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
         }
 
         return true;
