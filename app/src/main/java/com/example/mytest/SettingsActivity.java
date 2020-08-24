@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +72,19 @@ public class SettingsActivity extends AppCompatActivity {
                 InputFilter[] FilterArray = new InputFilter[1];
                 FilterArray[0] = new InputFilter.LengthFilter(4);
                 passwordEditText.setFilters(FilterArray);
+                passwordEditText.addTextChangedListener(new TextWatcher(){
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
+                        //Editable inputStr=passwordEditText.getText();
+                        if (passwordEditText.getText().toString().matches("^0") )
+                        {
+                            // Not allowed
+                            passwordEditText.setText("");
+                        }
+                    }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                    public void afterTextChanged(Editable s){}
+                });
                 ad.setView(passwordEditText);
 
                 // 확인 버튼 설정
@@ -107,6 +122,7 @@ public class SettingsActivity extends AppCompatActivity {
                     {
                         Boolean wantToCloseDialog = false;
                         String inputRegPassword= passwordEditText.getText().toString();
+                        Toast.makeText(SettingsActivity.this, "0넣을때"+inputRegPassword, Toast.LENGTH_SHORT).show();
                         if (inputRegPassword.equals("")) {
                             passwordEditText.post(new Runnable() {
                                 @Override
@@ -126,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity {
                             });
                             Toast.makeText(SettingsActivity.this, "4자리 숫자 입력하세요", Toast.LENGTH_SHORT).show();
                         }else {
-                            String sql="update user set password="+inputRegPassword;
+                            String sql="update user set password='"+inputRegPassword+"'";
                             try {
                                 database.execSQL(sql);
                                 Toast.makeText(SettingsActivity.this, "비번등록완료", Toast.LENGTH_SHORT).show();

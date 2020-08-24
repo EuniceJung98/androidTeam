@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         printLog("onCreate() call");
         String sqlUser = "create table if not exists user( "+
                 " user_id integer primary key autoincrement, "+
-                " password integer) ";
+                " password text) ";
         db.execSQL(sqlUser);
         String sqlIncome = "create table if not exists income( "+
                 " income_id integer primary key autoincrement, "+
