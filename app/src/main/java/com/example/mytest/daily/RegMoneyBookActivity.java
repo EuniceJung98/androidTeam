@@ -246,9 +246,10 @@ public class RegMoneyBookActivity extends AppCompatActivity {
         builder.setPositiveButton("계속추가", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+                amountEdit.setText("");
+//                Intent intent = getIntent();
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                startActivity(intent);
             }
         });
         builder.setNegativeButton("추가안함", new DialogInterface.OnClickListener() {

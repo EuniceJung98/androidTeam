@@ -14,15 +14,15 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mytest.daily.MainActivity;
+import com.example.mytest.settings.AssetUpdateActivity;
+import com.example.mytest.settings.CateUpdateActivity;
 
 import static android.R.id.home;
 
@@ -157,23 +157,43 @@ public class SettingsActivity extends AppCompatActivity {
                         //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
                     }
                 });
+            }
+        });
 
+        //카테고리 수정
+        findViewById(R.id.buttonUpdateDBCategory).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cateIntent = new Intent(SettingsActivity.this, CateUpdateActivity.class);
+                cateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(cateIntent);
+            }
+        });
 
+        //자산수정
+        findViewById(R.id.buttonUpdateDBAsset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent assetIntent = new Intent(SettingsActivity.this, AssetUpdateActivity.class);
+                assetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(assetIntent);
             }
         });
 
 
 
-    }
+   }//onCreate끝나는 부분
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId()==home){
             Intent intent = new Intent(this,MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

@@ -9,12 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".daily.CategorySpinnerActivity"
-            android:theme="@android:style/Theme.Dialog" ></activity>
+        <activity android:name=".settings.AssetUpdateActivity"
+            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity
+            android:name=".settings.CateUpdateActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".daily.CategorySpinnerActivity"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".daily.AssetSpinerActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".CalendarActivity"/>
+        <activity android:name=".CalendarActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".daily.RegMoneyBookActivity" />
         <activity android:name=".daily.UpdateMoneyBookActivity" />

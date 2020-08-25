@@ -169,20 +169,20 @@ public class MainActivity extends AppCompatActivity {
 
     }//onCreate끝
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //Log.d("달에서 전달받은값이 오나?", "onCreate: "+getIntent().getStringExtra("date"));
-        Intent loadedIntent=getIntent();
-        if(loadedIntent!=null){
-            String monthSelctDate=loadedIntent.getStringExtra("date");
-            Log.d("메인액티비티, onStart", "전달받은값: "+monthSelctDate);
-            if (monthSelctDate!=null){
-                textView.setText(monthSelctDate);
-            }
-            loadedIntent.removeExtra("date");
-        }
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        //Log.d("달에서 전달받은값이 오나?", "onCreate: "+getIntent().getStringExtra("date"));
+//        Intent loadedIntent=getIntent();
+//        if(loadedIntent!=null){
+//            String monthSelctDate=loadedIntent.getStringExtra("date");
+//            Log.d("메인액티비티, onStart", "전달받은값: "+monthSelctDate);
+//            if (monthSelctDate!=null){
+//                textView.setText(monthSelctDate);
+//            }
+//            loadedIntent.removeExtra("date");
+//        }
+//    }
 
     //헤드 가운데 날짜 선택했을때
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onFragementChanged(int index) {
-        Log.d("TAG", "메인 엑티비티에서 실행된 onFragementChanged: ");
+        //Log.d("TAG", "메인 엑티비티에서 실행된 onFragementChanged: ");
         if (index == 3) {
             //프래그먼트 변경
             getSupportFragmentManager().beginTransaction().replace(R.id.container, after1dayFragment).commit();

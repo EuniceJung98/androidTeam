@@ -49,6 +49,7 @@ import static com.example.mytest.R.id.titleText;
  * Use the {@link SelectDayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class SelectDayFragment extends Fragment {
     TextView before3,before2,before1,select,next1,next2,next3;
     TextView title;
