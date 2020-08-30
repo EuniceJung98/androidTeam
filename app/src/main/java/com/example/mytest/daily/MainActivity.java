@@ -33,6 +33,7 @@ import com.example.mytest.SettingsActivity;
 import com.example.mytest.daysofseven.After1dayFragment;
 import com.example.mytest.daysofseven.Before1dayFragment;
 import com.example.mytest.daysofseven.SelectDayFragment;
+import com.example.mytest.economyinfo.EconomyInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = MainActivity.this;
-        Log.d("메인엑티비티", "onCreate: ");
+        //Log.d("메인엑티비티", "onCreate: ");
         // Toast.makeText(getApplicationContext(),"onCreate",Toast.LENGTH_SHORT).show();
 
         toolbar = findViewById(R.id.toolbar);
@@ -150,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.tab4:
                         Toast.makeText(getApplicationContext(),"네번째 탭",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getApplicationContext(), EconomyInfoActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
                         return true;
 
 
@@ -160,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         Intent loadedIntent=getIntent();
         if(loadedIntent!=null){
             String monthSelctDate=loadedIntent.getStringExtra("date");
-            Log.d("메인액티비티, 크리에이트", "전달받은값: "+monthSelctDate);
+            //Log.d("메인액티비티, 크리에이트", "전달받은값: "+monthSelctDate);
             if (monthSelctDate!=null){
                 textView.setText(monthSelctDate);
             }
