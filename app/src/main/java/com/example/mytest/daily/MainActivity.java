@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mytest.CalendarActivity;
+import com.example.mytest.ChartActivity;
 import com.example.mytest.DatabaseHelper;
 import com.example.mytest.R;
 import com.example.mytest.SettingsActivity;
@@ -148,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.tab3:
                         Toast.makeText(getApplicationContext(),"세번째 탭",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getApplicationContext(), ChartActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
                         return true;
                     case R.id.tab4:
                         Toast.makeText(getApplicationContext(),"네번째 탭",Toast.LENGTH_SHORT).show();
