@@ -1,6 +1,5 @@
 package com.example.mytest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import com.example.mytest.daily.MainActivity;
 import java.util.ArrayList;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
+
     ArrayList<DailyInAndOut> items = new ArrayList<>();
 
     DailyInAndOut item;
@@ -24,8 +24,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @NonNull
     @Override
     public CalendarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.calendar_item, parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_item, parent,false);
         return new ViewHolder(itemView);
     }
 

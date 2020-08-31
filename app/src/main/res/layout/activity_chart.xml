@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ChartActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -26,8 +26,6 @@
                 android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
             </TextView>
 
-
-
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -40,41 +38,36 @@
         android:layout_marginBottom="?attr/actionBarSize"
         android:background="#f5f5f5">
 
-        <GridView
-            android:id="@+id/gridWeek"
-            android:layout_height="20dp"
+        <LinearLayout
+            android:id="@+id/chartFragment"
             android:layout_width="match_parent"
-            android:numColumns="7"
-            android:listSelector="#1cbcba"
-            />
-
-        <GridView
-            android:id="@+id/gridview"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="150dp"
-            android:layout_marginTop="30dp"
-            android:numColumns="7"
-            android:listSelector="#1cbcba"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             >
 
-        </GridView>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/chartTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabGravity="fill"
+                app:tabMode="fixed">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"/>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="년도별" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            app:srcCompat="@drawable/add"
-            android:backgroundTint="@color/titleBar"/>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="자산별" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
     </FrameLayout>
 
@@ -91,4 +84,5 @@
         app:menu="@menu/menu_bottom"
         app:labelVisibilityMode="unlabeled"
         />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

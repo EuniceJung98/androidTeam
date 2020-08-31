@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -34,15 +32,13 @@ import com.example.mytest.daily.RegMoneyBookActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import static android.R.id.home;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -88,6 +84,8 @@ public class CalendarActivity extends AppCompatActivity {
 
     int daycheck;
 
+    String ym;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +114,11 @@ public class CalendarActivity extends AppCompatActivity {
                         Intent intent2 = new Intent(getApplicationContext(), CalendarActivity.class);
                         intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent2);
+                        return true;
+                    case R.id.tab3:
+                        Intent intent3 = new Intent(getApplicationContext(), ChartActivity.class);
+                        intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent3);
                         return true;
                 }
                 return true;
@@ -159,7 +162,6 @@ public class CalendarActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(), "day " + day, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), RegMoneyBookActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("regDate", day);//선택한 날짜로 입력가능
@@ -216,7 +218,13 @@ public class CalendarActivity extends AppCompatActivity {
         dbhelper = new DatabaseHelper(this);
         database = dbhelper.getWritableDatabase();
 
-        //gridView 클릭시 상세내역볼 수 있음
+
+        adapter = new CalendarAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        //gridView 클릭시 상세내역볼 수 있음(현재 날짜로)
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -229,16 +237,37 @@ public class CalendarActivity extends AppCompatActivity {
                 if(dayStr.length() == 1){
                     dayStr = "0"+(position+2-dayNum);
                 }
-                day = yearNum + "-" + monthStr + "-" + dayStr;//조회시 조건에 사용하기 위함
+                ym = yearNum + "-" + monthStr + "-";
+                day = ym + dayStr;//조회시 조건에 사용하기 위함
                 adapter.clear();
                 select();
             }
         });
 
-        adapter = new CalendarAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        //통계에서 클릭시 넘어오는 날짜에 맞는 캘린더 보여줌
+        Intent barChartIntent = getIntent();
+        if(barChartIntent != null){
+            String monthBarChart = barChartIntent.getStringExtra("month");
+            if(monthBarChart != null){
+                String yearBarChart = monthBarChart.substring(0,4);
+                String monthBC = monthBarChart.substring(monthBarChart.indexOf("-")+1, monthBarChart.lastIndexOf("-"));
+                selectym = yearBarChart + "-" + monthBC + "-";
+                titleText.setText(yearBarChart + "년 " + monthBC + "월");
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        dayStr = String.valueOf(position+2-dayNum);//gridview의 각 칸을 position이라고 함
+                        //위에처럼하면 10이 안넘어가면 앞에 0을 붙혀서 동일하게 해줘야함
+                        if(dayStr.length() == 1){
+                            dayStr = "0"+(position+2-dayNum);
+                        }
+                        day = selectym + dayStr;
+                        adapter.clear();
+                        select();
+                    }
+                });
+            }
+        }
 
 
     }
