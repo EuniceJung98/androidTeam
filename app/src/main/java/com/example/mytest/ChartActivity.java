@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.example.mytest.chart.BarChartFragment;
 import com.example.mytest.chart.CategoryChartFragment;
 import com.example.mytest.daily.MainActivity;
 import com.example.mytest.chart.BarChartFragment;
+import com.example.mytest.economyinfo.EconomyInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -71,6 +73,11 @@ public class ChartActivity extends AppCompatActivity {
                         Intent intent3 = new Intent(getApplicationContext(), ChartActivity.class);
                         intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent3);
+                        return true;
+                    case R.id.tab4:
+                        Intent intent4 = new Intent(getApplicationContext(), EconomyInfoActivity.class);
+                        intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent4);
                         return true;
                 }
                 return true;

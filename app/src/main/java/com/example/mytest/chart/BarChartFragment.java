@@ -56,6 +56,7 @@ public class BarChartFragment extends Fragment {
 
         //막대그래프 설정
         barChart = view.findViewById(R.id.barChart);
+        barChart.setPinchZoom(false);
         barChart.setDrawBarShadow(false);
         barChart.setDrawGridBackground(false);
         //barChart.setTouchEnabled(false);//터치반응 막기(이것도 최대값 안되면 다시 실행)
@@ -64,7 +65,7 @@ public class BarChartFragment extends Fragment {
         barChart.getAxisRight().setDrawLabels(false);
         //x축설정
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);//x축 라벨 위치
-        //barChart.getXAxis().setSpaceBetweenLabels(3);//x축 간격(최대값 지정하는게 안되면 다시 실행)
+        barChart.getXAxis().setSpaceBetweenLabels(3);//x축 간격(최대값 지정하는게 안되면 다시 실행)
 
 
         monthArr = new ArrayList<>();
@@ -209,7 +210,6 @@ public class BarChartFragment extends Fragment {
 
         //차트 초기화
         barChart.invalidate();
-
         exData.clear();
         inData.clear();
 
@@ -231,8 +231,6 @@ public class BarChartFragment extends Fragment {
         //그래프 색깔
         exDataSet.setColor(Color.RED);
         inDataSet.setColor(Color.BLUE);
-//        exDataSet.setValueTextSize(0.0f);
-//        inDataSet.setValueTextSize(0.0f);
         //그래프로 표현할 수 있도록 데이터 추가
         barData.addDataSet(inDataSet);
         barData.addDataSet(exDataSet);
