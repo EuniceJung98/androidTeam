@@ -37,6 +37,8 @@ import com.example.mytest.daysofseven.SelectDayFragment;
 import com.example.mytest.economyinfo.EconomyInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pedro.library.AutoPermissions;
+import com.pedro.library.AutoPermissionsListener;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -50,7 +52,7 @@ import static com.example.mytest.R.id.textView14;
 import static com.example.mytest.R.id.textView15;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AutoPermissionsListener {
     Toolbar toolbar;
     DatePicker datePicker;
     TextView textView;
@@ -93,16 +95,6 @@ public class MainActivity extends AppCompatActivity {
         Date current = Calendar.getInstance().getTime();
         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(current);
         textView.setText(date);
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onClick(View v) {
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, listener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
-//                datePickerDialog.getDatePicker().setCalendarViewShown(false);
-//                datePickerDialog.show();
-//
-//            }
-//        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -168,29 +160,16 @@ public class MainActivity extends AppCompatActivity {
         Intent loadedIntent=getIntent();
         if(loadedIntent!=null){
             String monthSelctDate=loadedIntent.getStringExtra("date");
-            //Log.d("메인액티비티, 크리에이트", "전달받은값: "+monthSelctDate);
+            Log.d("메인액티비티, 크리에이트", "전달받은값: "+monthSelctDate);
             if (monthSelctDate!=null){
                 textView.setText(monthSelctDate);
             }
             loadedIntent.removeExtra("date");
         }
 
+        AutoPermissions.Companion.loadAllPermissions(this,101);
     }//onCreate끝
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        //Log.d("달에서 전달받은값이 오나?", "onCreate: "+getIntent().getStringExtra("date"));
-//        Intent loadedIntent=getIntent();
-//        if(loadedIntent!=null){
-//            String monthSelctDate=loadedIntent.getStringExtra("date");
-//            Log.d("메인액티비티, onStart", "전달받은값: "+monthSelctDate);
-//            if (monthSelctDate!=null){
-//                textView.setText(monthSelctDate);
-//            }
-//            loadedIntent.removeExtra("date");
-//        }
-//    }
 
     //헤드 가운데 날짜 선택했을때
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -350,8 +329,20 @@ public class MainActivity extends AppCompatActivity {
         database.close();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AutoPermissions.Companion.parsePermissions(this , requestCode,permissions,this);
+    }
 
+    @Override
+    public void onDenied(int i, String[] strings) {
+        //Toast.makeText(this,"거부: "+strings.length, Toast.LENGTH_SHORT).show();
+    }
 
-
+    @Override
+    public void onGranted(int i, String[] strings) {
+        //Toast.makeText(this,"승인: "+strings.length, Toast.LENGTH_SHORT).show();
+    }
 
 }

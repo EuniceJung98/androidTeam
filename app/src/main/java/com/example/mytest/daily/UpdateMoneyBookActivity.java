@@ -103,14 +103,6 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
             }
         });
 
-//        setCategory();
-//        setCategoryName();
-//        setAsset();
-//        //원래 작성된 내용 선택하기
-//        spinner.setSelection(assetNum);
-//        spinner2.setSelection(catNum);
-
-
         //날짜 버튼 클릭
         selecDayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,58 +219,6 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
 
     }
 
-//    private void setAsset() {
-//        arrayAdapter2 = new ArrayAdapter<>(getApplicationContext(),
-//                android.R.layout.simple_spinner_item,
-//                assetList);
-//        arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(arrayAdapter2);
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    inputAsset=assetList.get(position);
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) { }
-//        });
-//
-//    }
-
-//    private void setCategoryName() {
-//        if(isExpenseChecked){
-//            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-//                    android.R.layout.simple_spinner_item,
-//                    expenseCat);
-//            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinner2.setAdapter(arrayAdapter);
-//            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    inputCategory=expenseCat.get(position);
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) { }
-//            });
-//        }else{
-//            arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-//                    android.R.layout.simple_spinner_item,
-//                    incomeCat);
-//            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinner2.setAdapter(arrayAdapter);
-//            spinner2.setSelection(2);
-//            spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    inputCategory=incomeCat.get(position);
-//                }
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) { }
-//            });
-//        }
-//
-//    }
-
     private void setCategory() {
         int iNum=-1;
         int eNum =-1;
@@ -302,17 +242,6 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
             }
             expenseCat.add(name);
         }
-//        cursor = database.rawQuery("select asset_name from asset",null);
-//        //자산리스트
-//
-//        while(cursor.moveToNext()){
-//            assNum++;
-//            String name = cursor.getString(0);
-//            if(data.getAssetName().equals(name)){
-//                assetNum=assNum;
-//            }
-//            assetList.add(name);
-//        }
         cursor.close();
     }
 
@@ -327,7 +256,6 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
         String exInsertsql="insert into expense(expense_date,asset_name,expensecategory_name,amount,memo)"+
                 " values('"+inputDay+"','"+assetresult+"','"+categoryresult+"',"+
                 Integer.parseInt(inputAmount)+",'"+inputMemo+"')";
-
 
         //수입,지출 변동없을때 바로 수정하기
         String exUpsql="update expense set expense_date='" +inputDay+
@@ -427,6 +355,8 @@ public class UpdateMoneyBookActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP
                         |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                inputDay = selecDayButton.getText().toString();
+                intent.putExtra("date",inputDay+"");
                 finish();
                 MA.startActivity(intent);
             }

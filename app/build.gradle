@@ -45,5 +45,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
-
+    implementation 'com.github.pedroSG94:AutoPermissions:1.0.3'
 }

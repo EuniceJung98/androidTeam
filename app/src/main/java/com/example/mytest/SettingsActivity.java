@@ -10,10 +10,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -23,6 +25,14 @@ import android.widget.Toast;
 import com.example.mytest.daily.MainActivity;
 import com.example.mytest.settings.AssetUpdateActivity;
 import com.example.mytest.settings.CateUpdateActivity;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 import static android.R.id.home;
 
@@ -122,7 +132,7 @@ public class SettingsActivity extends AppCompatActivity {
                     {
                         Boolean wantToCloseDialog = false;
                         String inputRegPassword= passwordEditText.getText().toString();
-                        Toast.makeText(SettingsActivity.this, "0넣을때"+inputRegPassword, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SettingsActivity.this, "0넣을때"+inputRegPassword, Toast.LENGTH_SHORT).show();
                         if (inputRegPassword.equals("")) {
                             passwordEditText.post(new Runnable() {
                                 @Override
@@ -180,6 +190,32 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        //데이터 백업, 가져오기
+        findViewById(R.id.backup_load_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(SettingsActivity.this);
+
+                ad.setTitle("데이터");       // 제목 설정
+
+
+                ad.setPositiveButton("백업하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        exportDB();
+                    }
+                });
+                ad.setNegativeButton("데이터불러오기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        importDB();
+                    }
+                });
+                ad.show();
+
+            }
+        });
+
 
 
    }//onCreate끝나는 부분
@@ -193,6 +229,71 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void importDB() {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//" + "com.example.mytest"
+                        + "//databases//" + "moneybook.db";
+                String backupDBPath ="/moneybook_backup.db";
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                FileChannel src = new FileInputStream(backupDB).getChannel();
+                FileChannel dst = new FileOutputStream(currentDB).getChannel();
+
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                Toast.makeText(getApplicationContext(), "Import Successful!",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Import Failed!", Toast.LENGTH_SHORT)
+                    .show();
+
+        }
+    }
+
+    private void exportDB(){
+
+        final String inFileName = "/data/data/com.example.mytest/databases/moneybook.db";
+        try {
+            String resetPasswordSql="update user set password=''";
+            database.execSQL(resetPasswordSql);
+            File dbFile = new File(inFileName);
+            FileInputStream fis = new FileInputStream(dbFile);
+
+            String outFileName = Environment.getExternalStorageDirectory()+"/moneybook_backup.db";
+
+            // Open the empty db as the output stream
+            OutputStream output = new FileOutputStream(outFileName);
+
+            // Transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer))>0){
+                output.write(buffer, 0, length);
+            }
+            Toast.makeText(getApplicationContext(), "백업 성공!",
+                    Toast.LENGTH_SHORT).show();
+            // Close the streams
+            output.flush();
+            output.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            Toast.makeText(getApplicationContext(), "백업 실패!",
+                    Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "백업 실패!",
+                    Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
 

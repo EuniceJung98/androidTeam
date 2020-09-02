@@ -36,7 +36,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="#f5f5f5"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/buttonUpdateDBAsset"
@@ -45,10 +45,10 @@
             android:text="자산 수정" />
 
         <Button
-        android:id="@+id/buttonUpdateDBCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="카테고리 수정" />
+            android:id="@+id/buttonUpdateDBCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="카테고리 수정" />
 
 
         <Button
@@ -56,5 +56,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="비밀번호 설정" />
+
+        <Button
+            android:id="@+id/backup_load_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="백업/가져오기" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

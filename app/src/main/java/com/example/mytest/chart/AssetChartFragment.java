@@ -246,6 +246,7 @@ public class AssetChartFragment extends Fragment {
         adapter.clear();
         adapter.notifyDataSetChanged();
         assetTypeCnt.clear();
+        assetCnt.clear();
 
         if(database != null){
             if(month.equals("01") || month.equals("03") || month.equals("05") || month.equals("07") || month.equals("08") || month.equals("10") || month.equals("12")){

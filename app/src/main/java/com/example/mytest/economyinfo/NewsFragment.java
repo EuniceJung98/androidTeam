@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.example.mytest.R;
 
@@ -48,6 +50,7 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +59,17 @@ public class NewsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    WebView webView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news, container, false);
-    }
+        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.fragment_news, container, false);
+        webView=view.findViewById(R.id.WebView);
+        WebSettings webSettings = webView.getSettings();//웹뷰의 세팅을 받아와서 설정
+        //자바스크립트가 동작가능하도록 설정
+        webSettings.setJavaScriptEnabled(true);
+        webView.loadUrl("file:///android_asset/www/test.html");
+
+        return view;
+    }//onCreateView끝
 }
