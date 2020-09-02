@@ -1,7 +1,6 @@
 package com.example.mytest.chart;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 String month = item.getDate() + "-01";
                 intent.putExtra("month", month);
-//                Log.d("TAG", "onClick: p" + item.getDate());
                 v.getContext().startActivity(intent);
             }
         });
@@ -65,7 +63,6 @@ public class BarChartAdapter extends RecyclerView.Adapter<BarChartAdapter.ViewHo
 
         public void setItem(DailyInAndOut item, int position){
             String date = String.valueOf(item.getDate());
-            Log.d("TAG", "setItem: date" + item.getDate());
             String monthStr = date.substring(date.indexOf("-")+1);//년 부분만 짤라옴
             month.setText(monthStr + "월");
             income.setText(String.valueOf(incomeArr.get(position).getAmount()));

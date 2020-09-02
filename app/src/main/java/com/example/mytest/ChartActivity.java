@@ -3,13 +3,11 @@ package com.example.mytest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +17,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.mytest.chart.AssetChartFragment;
 import com.example.mytest.chart.BarChartFragment;
-import com.example.mytest.chart.CategoryChartFragment;
 import com.example.mytest.daily.MainActivity;
-import com.example.mytest.chart.BarChartFragment;
 import com.example.mytest.economyinfo.EconomyInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -51,6 +48,7 @@ public class ChartActivity extends AppCompatActivity {
         pager = findViewById(R.id.pager);
         titleText = findViewById(R.id.titleText);
         chartTab = findViewById(R.id.chartTab);
+        bundle = new Bundle();
 
         //하단바 설정
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -92,8 +90,8 @@ public class ChartActivity extends AppCompatActivity {
         MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
         barChartFragment = new BarChartFragment();
         adapter.addItem(barChartFragment);
-        CategoryChartFragment categoryChartFragment = new CategoryChartFragment();
-        adapter.addItem(categoryChartFragment);
+        AssetChartFragment assetChartFragment = new AssetChartFragment();
+        adapter.addItem(assetChartFragment);
         pager.setAdapter(adapter);
 
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(chartTab));
@@ -104,14 +102,10 @@ public class ChartActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         titleBar();
@@ -152,10 +146,9 @@ public class ChartActivity extends AppCompatActivity {
                 YearPicker picker = new YearPicker();
                 picker.setListener(listener);
                 picker.show(getSupportFragmentManager(), "YearPicker");
+
             }
         });
-
-        //titleText();
     }
 
     DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -165,14 +158,6 @@ public class ChartActivity extends AppCompatActivity {
             titleText.setText(year + "년");
         }
     };
-
-    public void titleText(){
-        Log.d("TAG", "titleText: " + titleText.getText().toString());
-        bundle = new Bundle(1);
-        bundle.putString("year", titleText.getText().toString());
-        Log.d("TAG", "titleBarbundle: " + bundle.toString());
-        barChartFragment.setArguments(bundle);
-    }
 
     //pager를 사용하기 위함
     class MyPagerAdapter extends FragmentStatePagerAdapter {

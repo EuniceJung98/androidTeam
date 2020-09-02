@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
@@ -24,6 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"/>
+
+    <TextView
+        android:id="@+id/barNoData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No data"
+        android:visibility="gone"
+        android:gravity="center"/>
 
 
 </LinearLayout>
