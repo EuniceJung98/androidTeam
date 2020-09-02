@@ -80,13 +80,13 @@ public class EconomyInfoActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     //menu_bottom.xml에 있는 tab id로 구분함
                     case R.id.tab1:
-                        Toast.makeText(getApplicationContext(),"왜 여기로 안가지 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"일일 탭",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                         return true;
                     case R.id.tab2:
-                        Toast.makeText(getApplicationContext(),"두째 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"캘린더 탭",Toast.LENGTH_SHORT).show();
                         intent = new Intent(getApplicationContext(), CalendarActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);

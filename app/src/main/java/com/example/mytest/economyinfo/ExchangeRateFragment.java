@@ -97,6 +97,7 @@ public class ExchangeRateFragment extends Fragment {
         if(requestQueue == null){
             requestQueue = Volley.newRequestQueue(getContext());
         }
+        minusdays[0]=0;
         sendRequest();
 
         return view;
