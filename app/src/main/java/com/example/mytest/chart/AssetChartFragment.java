@@ -6,26 +6,34 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mytest.chart.AssetChartAdapter;
 import com.example.mytest.DatabaseHelper;
 import com.example.mytest.MonthPicker;
 import com.example.mytest.R;
 import com.example.mytest.daily.DailyInAndOut;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.PieRadarChartTouchListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
@@ -75,7 +83,7 @@ public class AssetChartFragment extends Fragment {
         assetData = new ArrayList<>();
         pieEntry = new ArrayList();
         nodata = view.findViewById(R.id.pieNoData);
-        
+
         //그래프 설정
         pieChart.setUsePercentValues(true);//퍼센트 단위로 보여줌
         pieChart.setDescription(null);
@@ -83,6 +91,7 @@ public class AssetChartFragment extends Fragment {
         pieChart.setDragDecelerationFrictionCoef(0.95f);
         pieChart.setDrawHoleEnabled(false);
         pieChart.setTransparentCircleRadius(61f);
+        pieChart.setHighlightPerTapEnabled(true);
 
         //지출클릭시 변수변경
         expense.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +135,7 @@ public class AssetChartFragment extends Fragment {
         assetDate = "expense_date";
         //상세내역
         chartContent();
-        
+
         //그래프
         pieChart();
 
@@ -140,21 +149,23 @@ public class AssetChartFragment extends Fragment {
 
         //아무값이 없을 때 nodata를 띄워줌
         if(assetTypeCnt.size() == 0){
-             nodata.setVisibility(View.VISIBLE);
-             recyclerView.setVisibility(View.INVISIBLE);
-             pieChart.setVisibility(View.INVISIBLE);
+            nodata.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            pieChart.setVisibility(View.INVISIBLE);
         } else {
             nodata.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.VISIBLE);
             for(int i = 0; i < assetTypeCnt.size(); i++){
+                Log.d("TAG", "pieChart: " + (Integer.parseInt(assetCnt.get(i))/100));
                 pieEntry.add(new Entry(Float.parseFloat(assetCnt.get(i)), i));
                 dataSet = new PieDataSet(pieEntry, null);
             }
 
+
             data = new PieData(assetTypeCnt ,dataSet);
 
-            dataSet.setSliceSpace(3f);
+            dataSet.setSliceSpace(0.5f);//파이 사이간격(이거때문에 적은 값들이 안보였었음)
             dataSet.setSelectionShift(5f);
             dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 
@@ -168,11 +179,12 @@ public class AssetChartFragment extends Fragment {
 
     }
 
+    //그래프 속 값 포맷형식
     public class AssetValueFormatter implements ValueFormatter{
         private DecimalFormat mFormat;
 
         public AssetValueFormatter(){
-            mFormat = new DecimalFormat("###,###,##0.0");
+            mFormat = new DecimalFormat("###,###,##0.00");
         }
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
