@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.chart;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -17,8 +17,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.mytest.chart.AssetChartFragment;
-import com.example.mytest.chart.BarChartFragment;
+import com.example.mytest.calendar.CalendarActivity;
+import com.example.mytest.R;
+import com.example.mytest.SettingsActivity;
 import com.example.mytest.daily.MainActivity;
 import com.example.mytest.economyinfo.EconomyInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

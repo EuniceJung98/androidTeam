@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.calendar;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -26,6 +26,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mytest.DatabaseHelper;
+import com.example.mytest.R;
+import com.example.mytest.SettingsActivity;
+import com.example.mytest.chart.ChartActivity;
 import com.example.mytest.daily.DailyInAndOut;
 import com.example.mytest.daily.MainActivity;
 import com.example.mytest.daily.RegMoneyBookActivity;

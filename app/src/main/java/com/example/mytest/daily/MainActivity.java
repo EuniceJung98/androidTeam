@@ -26,8 +26,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mytest.CalendarActivity;
-import com.example.mytest.ChartActivity;
+import com.example.mytest.calendar.CalendarActivity;
+import com.example.mytest.chart.ChartActivity;
 import com.example.mytest.DatabaseHelper;
 import com.example.mytest.R;
 import com.example.mytest.SettingsActivity;

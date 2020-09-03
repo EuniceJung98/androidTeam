@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.chart;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
+
+import com.example.mytest.R;
 
 import java.util.Calendar;
 

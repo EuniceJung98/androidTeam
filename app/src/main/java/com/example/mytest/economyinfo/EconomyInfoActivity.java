@@ -1,7 +1,6 @@
 package com.example.mytest.economyinfo;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,8 +20,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mytest.CalendarActivity;
-import com.example.mytest.ChartActivity;
+import com.example.mytest.calendar.CalendarActivity;
+import com.example.mytest.chart.ChartActivity;
 import com.example.mytest.R;
 import com.example.mytest.SettingsActivity;
 import com.example.mytest.daily.MainActivity;

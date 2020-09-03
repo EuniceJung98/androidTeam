@@ -26,12 +26,12 @@
         <activity
             android:name=".daily.AssetSpinerActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".CalendarActivity" />
+        <activity android:name=".calendar.CalendarActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".daily.RegMoneyBookActivity" />
         <activity android:name=".daily.UpdateMoneyBookActivity" />
         <activity android:name=".daily.MainActivity" />
-        <activity android:name=".ChartActivity" />
+        <activity android:name=".chart.ChartActivity" />
         <activity android:name=".PasswordConfirmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

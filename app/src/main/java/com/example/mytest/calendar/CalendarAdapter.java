@@ -1,4 +1,4 @@
-package com.example.mytest;
+package com.example.mytest.calendar;
 
 import android.content.Intent;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mytest.R;
 import com.example.mytest.daily.DailyInAndOut;
 import com.example.mytest.daily.MainActivity;
 
