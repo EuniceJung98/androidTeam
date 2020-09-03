@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class AssetChartAdapter extends RecyclerView.Adapter<AssetChartAdapter.ViewHolder> {
 
     ArrayList<DailyInAndOut> items = new ArrayList<>();
+    ArrayList<String> perList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -38,21 +39,26 @@ public class AssetChartAdapter extends RecyclerView.Adapter<AssetChartAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView assetTypeText, assetText;
+        TextView assetTypeText, assetText, perText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             assetTypeText = itemView.findViewById(R.id.assetTypeText);
             assetText = itemView.findViewById(R.id.assetText);
+            perText = itemView.findViewById(R.id.assetPer);
         }
 
         public void setItem(DailyInAndOut item, int position) {
             assetTypeText.setText(item.getAssetName());
             assetText.setText(String.valueOf(item.getAmount()));
+            //Log.d("TAG", "setItem: " + perList.get(position));
+            perText.setText(" ( " + perList.get(position) + " )");
         }
     }
 
     public void addItem(DailyInAndOut item){items.add(item);}
+
+    public void addPer(String per){perList.add(per);}
 
     public void setItems(ArrayList<DailyInAndOut> item) {this.items = items;}
 
@@ -62,5 +68,6 @@ public class AssetChartAdapter extends RecyclerView.Adapter<AssetChartAdapter.Vi
 
     public void clear(){
         items.clear();
+        perList.clear();
     }
 }

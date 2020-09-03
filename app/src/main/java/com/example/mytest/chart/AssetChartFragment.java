@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ import java.util.Locale;
 
 public class AssetChartFragment extends Fragment {
 
-    TextView titleText, monthText;
+    TextView titleText, monthText, perText;
     String year, month;
     int day;
     RecyclerView recyclerView;
@@ -125,6 +124,7 @@ public class AssetChartFragment extends Fragment {
         //제일처음지출값 적용
         assetType = "expense";
         assetDate = "expense_date";
+
         //상세내역
         chartContent();
 
@@ -149,7 +149,6 @@ public class AssetChartFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.VISIBLE);
             for(int i = 0; i < assetTypeCnt.size(); i++){
-                Log.d("TAG", "pieChart: " + (Integer.parseInt(assetCnt.get(i))/100));
                 pieEntry.add(new Entry(Float.parseFloat(assetCnt.get(i)), i));
                 dataSet = new PieDataSet(pieEntry, null);
             }
@@ -267,7 +266,6 @@ public class AssetChartFragment extends Fragment {
             year_month_day = year + "-" + month + "-" + day;
             year_month = year + "-" + month;
             sql = "select asset_name, sum(amount) from " + assetType + " where " + assetDate + " >= '" + year_month + "-01' and " + assetDate + " <= " + "'" + year_month_day + "' group by asset_name";
-
             if(sql != null){
                 Cursor cursor = database.rawQuery(sql, null);
                 while (cursor.moveToNext()){
@@ -279,6 +277,15 @@ public class AssetChartFragment extends Fragment {
                     adapter.addItem(d);
                 }
                 cursor.close();
+                int amountSum = 0;
+                for(int i = 0; i < assetTypeCnt.size(); i++){
+                 amountSum += Integer.parseInt(assetCnt.get(i));
+                }
+               // Log.d("TAG", "amountSum: " + amountSum);
+                for(int i = 0; i < assetTypeCnt.size(); i++){
+                    //Log.d("TAG", "asset: " + String.format("%.2f", (Float.parseFloat(assetCnt.get(i))/amountSum)*100));
+                    adapter.addPer(String.format("%.2f", (Float.parseFloat(assetCnt.get(i))/amountSum)*100) + " %");
+                }
             }
         }
     }
