@@ -3,6 +3,7 @@ package com.example.mytest.chart;
 import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,12 +22,11 @@ import com.example.mytest.DatabaseHelper;
 import com.example.mytest.R;
 import com.example.mytest.daily.DailyInAndOut;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -52,9 +52,11 @@ public class AssetChartFragment extends Fragment {
     ArrayList<String> assetData;
     ArrayList<String> assetTypeCnt, assetCnt;
     PieDataSet dataSet;
-    ArrayList pieEntry;
+    ArrayList<PieEntry> pieEntry;
     PieData data;
     TextView nodata;
+    DecimalFormat mFormat;
+    boolean percentSignSeparated;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +74,7 @@ public class AssetChartFragment extends Fragment {
         assetTypeCnt = new ArrayList<>();
         assetCnt = new ArrayList<>();
         assetData = new ArrayList<>();
-        pieEntry = new ArrayList();
+        pieEntry = new ArrayList<PieEntry>();
         nodata = view.findViewById(R.id.pieNoData);
 
         //그래프 설정
@@ -83,6 +85,9 @@ public class AssetChartFragment extends Fragment {
         pieChart.setDrawHoleEnabled(false);
         pieChart.setTransparentCircleRadius(61f);
         pieChart.setHighlightPerTapEnabled(true);
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setEntryLabelTextSize(15f);
+        pieChart.setMinAngleForSlices(10f);
 
         //지출클릭시 변수변경
         expense.setOnClickListener(new View.OnClickListener() {
@@ -149,19 +154,21 @@ public class AssetChartFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.VISIBLE);
             for(int i = 0; i < assetTypeCnt.size(); i++){
-                pieEntry.add(new Entry(Float.parseFloat(assetCnt.get(i)), i));
+                pieEntry.add(new PieEntry(Float.parseFloat(assetCnt.get(i)), assetTypeCnt.get(i)));
                 dataSet = new PieDataSet(pieEntry, null);
             }
-
-
-            data = new PieData(assetTypeCnt ,dataSet);
 
             dataSet.setSliceSpace(0.5f);//파이 사이간격(이거때문에 적은 값들이 안보였었음)
             dataSet.setSelectionShift(5f);
             dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+            dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+            //dataSet.setValueLinePart1OffsetPercentage(80.f);
+            dataSet.setValueLinePart1Length(0.4f);
+            dataSet.setValueLinePart2Length(1.0f);
 
+            data = new PieData((dataSet));
             data.setValueTextSize(15f);
-            data.setValueFormatter(new AssetValueFormatter());
+            data.setValueFormatter(new PercentFormatter());
 
             pieChart.setData(data);
 
@@ -170,18 +177,28 @@ public class AssetChartFragment extends Fragment {
 
     }
 
-    //그래프 속 값 포맷형식
-    public class AssetValueFormatter implements ValueFormatter{
-        private DecimalFormat mFormat;
+    public class PercentFormatter extends ValueFormatter {
 
-        public AssetValueFormatter(){
+        public PercentFormatter() {
             mFormat = new DecimalFormat("###,###,##0.00");
+            percentSignSeparated = true;
         }
+
         @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+        public String getFormattedValue(float value) {
             return mFormat.format(value) + " %";
         }
 
+        @Override
+        public String getPieLabel(float value, PieEntry pieEntry) {
+            if (pieChart != null && pieChart.isUsePercentValuesEnabled()) {
+                // Converted to percent
+                return getFormattedValue(value);
+            } else {
+                // raw value, skip percent sign
+                return mFormat.format(value);
+            }
+        }
     }
 
     //년도 설정

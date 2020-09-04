@@ -40,9 +40,8 @@ public class BarChartFragment extends Fragment {
     String exSql, inSql;
     BarChart barChart;
     ArrayList<DailyInAndOut> inList, exList;
-    ArrayList inData, exData;
+    ArrayList<BarEntry> inData, exData;
     TextView titleText;
-    BarData barData;
     BarDataSet exDataSet, inDataSet;
     String amountIn, amountEx;
     Bundle bundle;
@@ -58,22 +57,22 @@ public class BarChartFragment extends Fragment {
         //막대그래프 설정
         barChart = view.findViewById(R.id.barChart);
         barChart.setPinchZoom(false);
+        barChart.setDoubleTapToZoomEnabled(false);
         barChart.setDrawBarShadow(false);
         barChart.setDrawGridBackground(false);
-        //barChart.setTouchEnabled(false);//터치반응 막기(이것도 최대값 안되면 다시 실행)
+        barChart.setTouchEnabled(true);
         barChart.setDescription(null);//description 안보이도록
         //y축 오른쪽설정
         barChart.getAxisRight().setDrawLabels(false);
         //x축설정
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);//x축 라벨 위치
-        barChart.getXAxis().setSpaceBetweenLabels(3);//x축 간격(최대값 지정하는게 안되면 다시 실행)
 
 
         monthArr = new ArrayList<>();
         inList = new ArrayList<>();
         exList = new ArrayList<>();
-        inData = new ArrayList();
-        exData = new ArrayList();
+        inData = new ArrayList<BarEntry>();
+        exData = new ArrayList<BarEntry>();
         exNull = new ArrayList<String>();
         inNull = new ArrayList<String>();
 
@@ -193,10 +192,6 @@ public class BarChartFragment extends Fragment {
     }
 
     private void multiBarChart() {
-
-        //월에 대한 값 그래프 데이터에 추가
-        barData = new BarData(monthArr);
-
         //차트 초기화
         barChart.invalidate();
         exData.clear();
@@ -212,24 +207,34 @@ public class BarChartFragment extends Fragment {
             barChart.setVisibility(View.VISIBLE);
             for(int i = 0; i < exList.size(); i++) {
                 //표에 표현할 데이터추가
-                exData.add(new BarEntry(exList.get(i).getAmount(), i));
-                inData.add(new BarEntry(inList.get(i).getAmount(), i));
+                exData.add(new BarEntry(Float.parseFloat(monthArr.get(i)), exList.get(i).getAmount()));
+                inData.add(new BarEntry(Float.parseFloat(monthArr.get(i)), inList.get(i).getAmount()));
             }
 
-            //위에서 추가한 데이터를 그래프로 표현 셋팅해줌
-            exDataSet = new BarDataSet(exData, "지출");
-            inDataSet = new BarDataSet(inData, "수입");
-            //그래프 색깔
-            exDataSet.setColor(Color.RED);
-            inDataSet.setColor(Color.BLUE);
-            //그래프로 표현할 수 있도록 데이터 추가
-            barData.addDataSet(inDataSet);
-            barData.addDataSet(exDataSet);
-            //그래프에 데이터 추가
-            barChart.setData(barData);
-            //차트 내용 잘 보이도록 1~6월까지만 보이도록 해줌
-            barChart.setVisibleXRangeMaximum(14);
-            barChart.notifyDataSetChanged();
+            if(barChart.getData() != null && barChart.getData().getDataSetCount() > 0){
+                exDataSet = (BarDataSet) barChart.getData().getDataSetByIndex(0);
+                inDataSet = (BarDataSet) barChart.getData().getDataSetByIndex(1);
+                exDataSet.setValues(exData);
+                inDataSet.setValues(inData);
+                barChart.getData().notifyDataChanged();
+                barChart.notifyDataSetChanged();
+            } else {
+                //위에서 추가한 데이터를 그래프로 표현 셋팅해줌
+                exDataSet = new BarDataSet(exData, "지출");
+                inDataSet = new BarDataSet(inData, "수입");
+                exDataSet.setColor(Color.RED);
+                inDataSet.setColor(Color.BLUE);
+
+                BarData data = new BarData(exDataSet, inDataSet);
+                barChart.setData(data);
+            }
+
+            barChart.getBarData().setBarWidth(0.3f);
+            barChart.getXAxis().setCenterAxisLabels(true);
+            barChart.getXAxis().setAxisMinimum(Float.parseFloat(monthArr.get(0)));
+            barChart.getXAxis().setAxisMaximum(Float.parseFloat(monthArr.get(0))+barChart.getBarData().getGroupWidth(0.1f, 0.15f)*12);
+            barChart.groupBars(Float.parseFloat(monthArr.get(0)), 0.1f, 0.15f);
+            barChart.setVisibleXRangeMaximum(6);
         }
 
     }
