@@ -247,9 +247,7 @@ public class RegMoneyBookActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 amountEdit.setText("");
-//                Intent intent = getIntent();
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                startActivity(intent);
+                memoEdit.setText("");
             }
         });
         builder.setNegativeButton("추가안함", new DialogInterface.OnClickListener() {

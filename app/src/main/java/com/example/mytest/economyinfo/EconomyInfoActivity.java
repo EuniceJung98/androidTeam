@@ -53,8 +53,6 @@ public class EconomyInfoActivity extends AppCompatActivity {
         adapter.addPage(exchangeRateFragment);
         StockFragment stockFragment = new StockFragment();
         adapter.addPage(stockFragment);
-        NewsFragment newsFragment = new NewsFragment();
-        adapter.addPage(newsFragment);
         pager.setAdapter(adapter);
 
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -79,26 +77,26 @@ public class EconomyInfoActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     //menu_bottom.xml에 있는 tab id로 구분함
                     case R.id.tab1:
-                        Toast.makeText(getApplicationContext(),"일일 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"일일 탭d으고 알나",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                         return true;
                     case R.id.tab2:
-                        Toast.makeText(getApplicationContext(),"캘린더 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"네번째에서 캘린더 탭",Toast.LENGTH_SHORT).show();
                         intent = new Intent(getApplicationContext(), CalendarActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                         return true;
 
                     case R.id.tab3:
-                        Toast.makeText(getApplicationContext(),"세번째 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"네번째에서 세번째 탭",Toast.LENGTH_SHORT).show();
                         intent = new Intent(getApplicationContext(), ChartActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                         return true;
                     case R.id.tab4:
-                        Toast.makeText(getApplicationContext(),"네번째 탭",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"네네네번째 탭",Toast.LENGTH_SHORT).show();
                         intent = new Intent(getApplicationContext(), EconomyInfoActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
